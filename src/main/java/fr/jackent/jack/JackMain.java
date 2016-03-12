@@ -1,5 +1,7 @@
 package fr.jackent.jack;
 
+import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -44,7 +46,7 @@ public class JackMain
      * @param args
      *            Command-line arguments
      * 
-     * @throws IllegalArgumentEception
+     * @throws IllegalArgumentException
      * 
      * @return The execution focus that has been detected.
      */
