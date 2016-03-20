@@ -4,27 +4,9 @@ package fr.jackent.jack.pluginManagement;
  * Created by Aurelien on 02/21/16.
  */
 
-/**
- * Interface de base pour les plugins de notre application.
- * @author Lainé Vincent (dev01, http://vincentlaine.developpez.com/ )
- *
- * Cette interface n'est destinée à être directement implémenté dans un plugins,
- * elle sert à définir un comportement commun à toutes les interfaces de plugins.
- *
- */
 public interface Pluggable {
-
-    /**
-     * Obtient le libellé à afficher dans les menu ou autre pour le plugins
-     * @return Le libellé sous forme de String. Ce libellé doit être clair et compréhensible facilement
-     */
-    public String getLibelle();
-
-    /**
-     * Obtient la catégorie du plugins. Cette catégorie est celle dans laquelle le menu du plugins sera ajouté une fois chargé
-     * @return
-     */
-    public int getCategorie();
-
+    public void plug();
+    public void unplug();
+    public String getName();
 }
 

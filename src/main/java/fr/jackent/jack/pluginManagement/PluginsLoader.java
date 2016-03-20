@@ -1,188 +1,106 @@
 package fr.jackent.jack.pluginManagement;
 
-/**
- * Created by Aurelien on 02/21/16.
- */
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.IllegalFormatCodePointException;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
-@Slf4j
+@AllArgsConstructor
 public class PluginsLoader {
 
-    @Getter @Setter private LinkedList<String> files;
-    /**
-     * Constructeur par défaut
-     *
-     */
-    public PluginsLoader(){
-        this.files = new LinkedList<String>();
-    }
+    @Getter @Setter private String mainClassId;
+    private static ClassLoader classLoader;
 
-    /**
-     * Constucteur initialisant le tableau de fichier à charger.
-     * @param files Tableau de String contenant la liste des fichiers à charger.
-     */
-    public PluginsLoader(LinkedList<String> files) {
-        this();
-        this.files = files;
-    }
+    public List<Pluggable> load(String folderPath){
+        List<Pluggable> plugins = new ArrayList<Pluggable>();
+        final List<URL> urls = new ArrayList<URL>();
 
+        List<String> classes = getPluginsByFolder(urls, folderPath);
 
-    /**
-     * Fonction de chargement de tout les plugins de type IntPlugins
-     * @return Une collection de IntPlugins contenant les instances des plugins
-     * @throws Exception si file = null ou file.length = 0
-     */
-    public ArrayList<Pluggable> exec() throws Exception {
+        AccessController.doPrivileged(new PrivilegedAction<Object>(){
+            @Override
+            public Object run() {
+                classLoader = new URLClassLoader(
+                        urls.toArray(new URL[urls.size()]),
+                        PluginsLoader.class.getClassLoader());
 
-        ArrayList<Pluggable> plugins = this.loadPlugins();
+                return null;
+            }
+        });
 
-        for(Pluggable plugin : plugins){
-            plugins.add(plugin.getClass().newInstance());
-        }
-
-        return plugins;
-    }
-
-    private ArrayList<Pluggable> loadPlugins() throws IllegalArgumentException, NullPointerException, FileNotFoundException, ClassNotFoundException {
-
-        if(files == null || files.size() == 0 ){
-            log.error("No argument files were given");
-            throw new IllegalArgumentException("No argument files were given");
-        }
-
-        int filesCounter = files.size();
-        ArrayList<Pluggable> plugins = new ArrayList<Pluggable>();
-
-        for(int index = 0 ; index < filesCounter ; index ++ )
-        {
-            String filepath = this.files.removeFirst();
-
-            plugins.addAll(loadJarFile(filepath));
-        }
-        return plugins;
-    }
-
-    private ArrayList<Pluggable> loadJarFile(String filepath) throws IllegalArgumentException {
-
-        File pluginFile;
-        try {
-            pluginFile = loadFileByPath(filepath);
-        }
-        catch (FileNotFoundException e) {
-            String exceptionMessage = "Given file is unreachable : \"" + filepath + "\".";
-            log.error(exceptionMessage);
-            throw new IllegalArgumentException(exceptionMessage);
-        }
-
-
-        URL pluginUrl = loadUrlByFile(pluginFile);
-
-        URLClassLoader loader = new URLClassLoader(new URL[] {pluginUrl});
-
-        JarFile pluginJar = loadJarFileByFile(pluginFile);
-
-        return parseJarClasses(loader, pluginJar);
-    }
-
-    private File loadFileByPath(String filepath) throws FileNotFoundException {
-
-        if(filepath == null)
-        {
-            log.error("Null filepath has been encountered while loading a plugin file");
-            throw new NullPointerException("Null filepath has been encountered while loading a plugin file");
-        }
-
-        File file = new File(filepath);
-
-        if(!file.exists() ) {
-            log.error("No such plugin has been found : " + filepath);
-            throw new FileNotFoundException("No such plugin has been found : " + filepath);
-        }
-
-        return file;
-    }
-
-    private URL loadUrlByFile(File pluginFile) {
-        try
-        {
-           return pluginFile.toURI().toURL();
-        }
-
-        catch (MalformedURLException e)
-        {
-            String exceptionMessage = "Illegal file URL given for file : \"" + pluginFile.getAbsolutePath() + "\".";
-
-            log.error(exceptionMessage);
-            throw new IllegalArgumentException(exceptionMessage);
-        }
-    }
-
-    private JarFile loadJarFileByFile(File pluginFile) {
-        try
-        {
-            return new JarFile(pluginFile.getAbsolutePath());
-        }
-
-        catch (IOException e) {
-            log.error("Given file is not a correct JAR archive : " + pluginFile.getAbsolutePath());
-            throw new IllegalArgumentException("Given file is not a correct JAR archive : " + pluginFile.getAbsolutePath());
-        }
-    }
-
-    private ArrayList<Pluggable> parseJarClasses(URLClassLoader loader, JarFile pluginJar) {
-        Enumeration enumeration = pluginJar.entries();
-        String jarClass = "";
-        ArrayList<Pluggable> plugins = new ArrayList<Pluggable>();
-
-        while(enumeration.hasMoreElements()) {
-            jarClass = enumeration.nextElement().toString();
+        for(String c : classes){
             try {
-                plugins.addAll(parseJarClass(loader, jarClass));
-            }
-            catch (ClassNotFoundException e) {
-                log.warn("Could not load \"" + jarClass + "\" class.");
+                Class<?> moduleClass = Class.forName(c, true, classLoader);
+
+                if(Pluggable.class.isAssignableFrom(moduleClass)){
+                    Class<Pluggable> castedClass = (Class<Pluggable>)moduleClass;
+
+                    Pluggable module = castedClass.newInstance();
+
+                    plugins.add(module);
+                }
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
+
         return plugins;
     }
 
-    private ArrayList<Pluggable> parseJarClass(URLClassLoader loader, String pluginName) throws ClassNotFoundException {
-        Class tmpClass = null;
-        ArrayList<Pluggable> plugins = new ArrayList<Pluggable>();
+    private List<String> getPluginsByFolder(List<URL> urls, String folderPath) {
 
-        if(pluginName.length() > 6 && pluginName.substring(pluginName.length()-6).compareTo(".class") == 0) {
+        List<String> classes = new ArrayList<String>();
 
-            pluginName = pluginName.substring(0,pluginName.length()-6);
-            pluginName = pluginName.replace('/','.');
-            System.out.println("Class name : " + pluginName);
+        File[] files = new File(folderPath).listFiles(new ModuleFilter());
 
-            tmpClass = Class.forName(pluginName, false, loader);
+        for(File f : files){
+            JarFile jarFile = null;
 
-            for(int i = 0 ; i < tmpClass.getInterfaces().length; i ++ )
-            {
-                if(tmpClass.getInterfaces()[i].getName().equals("fr.jackent.jack.pluginManagement.Pluggable")) {
-                    plugins.add(Pluggable.class.cast(tmpClass));
+            try {
+                jarFile = new JarFile(f);
+
+                Manifest manifest = jarFile.getManifest();
+
+                String moduleClassName = manifest.getMainAttributes().getValue(mainClassId);
+
+                classes.add(moduleClassName);
+
+                urls.add(f.toURI().toURL());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(jarFile != null){
+                    try {
+                        jarFile.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
 
-        return plugins;
+        return classes;
     }
 
-
+    private static class ModuleFilter implements FileFilter {
+        @Override
+        public boolean accept(File file) {
+            return file.isFile() && file.getName().toLowerCase().endsWith(".jar");
+        }
+    }
 }

@@ -146,6 +146,7 @@
 						<argLine>-Xms512m -Xmx756m -XX:MaxPermSize=128M</argLine>
 						<includes>
 							<include>%regex[.*Test.*]</include>
+							<include>%regex[.*IT.*]</include>
 						</includes>
 					</configuration>
 				</plugin>
