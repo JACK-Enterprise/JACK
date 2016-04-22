@@ -17,6 +17,27 @@ public class Ellipsoid {
     private double maximumRadius;
     private double centerToleranceSquared;
 
+    /**
+     * Default constructor
+     * used to instance a new Ellipsoid without cartesian point
+     * The initialize method can be used later to define the Ellipsoid surface
+     */
+    public Ellipsoid(){
+    }
+
+    /**
+     * a quadratic surface defined in Cartesian coordinates by the equation
+     * <code>(x / a)^2 + (y / b)^2 + (z / c)^2 = 1</code>.
+     * Used to represents the shape of the planetary bodies.
+     * @param x
+     *          The radius in the x direction
+     * @param y
+     *          The radius in the y direction
+     * @param z
+     *          The radius in the z direction
+     *
+     * @exception {DeveloperError} All radii components must be greater or equal to 0.
+     */
     public Ellipsoid(double x, double y, double z){
         try {
             initialize(this, x, y, z);
@@ -55,6 +76,32 @@ public class Ellipsoid {
 
         ellipsoid.centerToleranceSquared = getEPSILON1();
 
+    }
+
+    /**
+     * Computes an Ellipsoid from a Cartesian object
+     *
+     * @param cartesian
+     *                  The ellipsoid's radius in the x, y, z directions.
+     * @param result
+     *                  The instance of an Ellipsoid if defined
+     * @return A new Ellipsoid instance.
+     *
+     * @exception {DeveloperError} All radii components must be greater or equal to 0.
+     */
+    public Ellipsoid fromCartesian3(Cartesian3 cartesian, Ellipsoid result){
+        if(!defined(result)){
+            result = new Ellipsoid();
+        }
+        if(!defined(cartesian)){
+            return result;
+        }
+        try {
+            initialize(result, cartesian.x, cartesian.y, cartesian.z);
+        } catch (DeveloperError developerError) {
+            developerError.printStackTrace();
+        }
+        return result;
     }
 
     public Cartesian3 getRadii() {
