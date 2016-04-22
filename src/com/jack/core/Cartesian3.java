@@ -6,9 +6,9 @@ import static com.jack.core.StdDevLib.*;
  */
 public class Cartesian3 {
 
-    private double x;
-    private double y;
-    private double z;
+    public double x;
+    public double y;
+    public double z;
 
     /**
      *
