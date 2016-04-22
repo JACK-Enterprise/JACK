@@ -4,8 +4,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="655.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="655.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.view.SettingsLayoutController">
    <children>
       <SplitPane dividerPositions="0.8668341708542714" layoutX="132.0" layoutY="21.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -23,8 +22,8 @@
                <children>
                   <Button layoutX="574.0" layoutY="13.0" mnemonicParsing="false" prefWidth="65.0" text="%key.help" />
                   <Button disable="true" layoutX="483.0" layoutY="13.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="%key.apply" />
-                  <Button cancelButton="true" layoutX="410.0" layoutY="13.0" mnemonicParsing="false" prefWidth="65.0" text="%key.cancel" />
-                  <Button defaultButton="true" layoutX="337.0" layoutY="13.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%key.ok" />
+                  <Button cancelButton="true" layoutX="410.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="65.0" text="%key.cancel" />
+                  <Button defaultButton="true" layoutX="337.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="25.0" prefWidth="65.0" text="%key.ok" />
                </children>
             </AnchorPane>
         </items>

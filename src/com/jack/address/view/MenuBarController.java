@@ -4,17 +4,21 @@ package com.jack.address.view;
  * Created by Maxime on 22/04/2016.
  */
 
+import com.sun.glass.ui.MenuBar;
 import com.sun.javaws.Main;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
 
 /**
- * The controller class for the RootLayout
+ * The controller class for the MenuBar
  */
 public class MenuBarController {
 
     // Reference to the main application
     private MainApp mainApp;
+
+    @FXML
+    private MenuBar menuBar;
 
     /**
      * The constructor.
@@ -39,5 +43,10 @@ public class MenuBarController {
      */
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+    }
+
+    @FXML
+    private void handleSettings(){
+        boolean okClicked = mainApp.showSettingsWindow();
     }
 }

@@ -54,6 +54,8 @@ public class MainApp extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
+          //  showSettingsWindow();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,6 +78,7 @@ public class MainApp extends Application {
         try {
             // Load fxml file and create anew stage for the window setting
             FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("view/SettingsLayout.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
