@@ -23,10 +23,10 @@ JACK The Java cartographic app !
 <h3> Credits</h3>
 
  This application has been developped by <a href="https://github.com/JACK-Enterprise">JACK Enterprise</a>,
- a small<a href="http://www.esgi.fr/ecole-informatique.html">ESGI</a>'s 3 students organization :
+ a small <a href="http://www.esgi.fr/ecole-informatique.html">ESGI</a>'s 3 students organization :
 
-                 - <a href="https://github.com/ACID-KILLA666">ACID-KILLA666</a>
-                 - <a href="https://github.com/Marma92">Marma92</a>
-                 - <a href="https://github.com/Sorion">Sorion</a>
+ - <a href="https://github.com/ACID-KILLA666">ACID-KILLA666</a>
+ - <a href="https://github.com/Marma92">Marma92</a>
+ - <a href="https://github.com/Sorion">Sorion</a>
 
 Thanks for downloading !
