@@ -45,14 +45,14 @@ public class AnnotationParser {
         if(tree != null)
         {
             List<ClassTree> parents = tree.getParents();
-            Class target = tree.getNode();
+            Class targetNode = tree.getNode();
             for(ClassTree parent : parents) {
                 binder.addAll(recurse_parse(parent));
             }
-            AnnotationBinder a = new AnnotationBinder(target, getClassAnnotations(target));
+            AnnotationBinder a = new AnnotationBinder(targetNode, getClassAnnotations(targetNode));
             binder.add(a);
-            binder.addAll(getClassMethodsAnnotations(target));
-            binder.addAll(getClassFieldsAnnotations(target));
+            binder.addAll(getClassMethodsAnnotations(targetNode));
+            binder.addAll(getClassFieldsAnnotations(targetNode));
         }
         
         return binder;
@@ -63,7 +63,7 @@ public class AnnotationParser {
         List<Annotation> output = new ArrayList<Annotation>();
         if(target != null)
         {
-            annotations = target.getAnnotations();
+            annotations = target.getDeclaredAnnotations();
             if(annotations != null)
             {
                 output.addAll(Arrays.asList(annotations));
@@ -77,7 +77,7 @@ public class AnnotationParser {
         List<Annotation> output = new ArrayList<Annotation>();
         if(target != null)
         {
-            annotations = target.getAnnotations();
+            annotations = target.getDeclaredAnnotations();
             if(annotations != null)
             {
                 output.addAll(Arrays.asList(annotations));
@@ -92,7 +92,6 @@ public class AnnotationParser {
         if(target != null)
         {
             Method[] methods = target.getMethods();
-            Annotation[] annotations = null;
             for(Method method : methods) {
                 output.add(new AnnotationBinder(method, getClassMethodAnnotations(method)));
             }
@@ -105,7 +104,7 @@ public class AnnotationParser {
         List<Annotation> output = new ArrayList<Annotation>();
         if(target != null)
         {
-            annotations = target.getAnnotations();
+            annotations = target.getDeclaredAnnotations();
             if(annotations != null)
             {
                 output.addAll(Arrays.asList(annotations));
@@ -119,8 +118,7 @@ public class AnnotationParser {
         
         if(target != null)
         {
-            Field[] fields = target.getFields();
-            Annotation[] annotations = null;
+            Field[] fields = target.getDeclaredFields();
             for(Field field : fields) {
                 output.add(new AnnotationBinder(field, getClassFieldAnnotations(field)));
             }

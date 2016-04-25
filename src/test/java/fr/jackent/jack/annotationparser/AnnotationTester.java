@@ -5,14 +5,15 @@
  */
 package fr.jackent.jack.annotationparser;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Aurelien
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface AtTestAnnotation {
-
+public class AnnotationTester {
+        public static boolean classTester = false;
+        public static boolean methodTester = false;
+        public static boolean fieldTester = false;
 }

@@ -19,11 +19,9 @@ public class AnnotatedTestClass {
         
         public AnnotatedTestClass() {
             this.tester = false;
-            
         }
         
         @AtTestAnnotation
         public void f(){
-            
         }
     }

@@ -10,6 +10,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -17,19 +18,6 @@ import org.junit.Test;
  * @author Aurelien
  */
 public class AnnotationInterpreterIT {
-    
-    public class TestAnnotation extends AnnotationFunctionBinder {
-
-        @Override
-        public Class<? extends Annotation> annotationType() {
-            return AtTestAnnotation.class;
-        }
-
-        @Override
-        public void run(AnnotatedElement element) {
-            System.out.println("OK");
-        }
-    }
     
     @Test
     public void shouldParseAnnotation() {
@@ -41,5 +29,10 @@ public class AnnotationInterpreterIT {
         AnnotationInterpreter interpreter = new AnnotationInterpreter(binders, functionBinders);
         
         interpreter.run();
+        
+        assertTrue(AnnotationTester.classTester);
+        assertTrue(AnnotationTester.methodTester);
+        assertTrue(AnnotationTester.fieldTester);
+        
     }
 }
