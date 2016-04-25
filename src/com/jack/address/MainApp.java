@@ -5,8 +5,10 @@ package com.jack.address;/**
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import com.jack.address.view.MenuBarController;
 import com.jack.address.view.SettingsLayoutController;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -34,6 +36,7 @@ public class MainApp extends Application {
 
         initRootLayout();
 
+
     }
 
     /**
@@ -54,13 +57,13 @@ public class MainApp extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
-          //  showSettingsWindow();
+
+            showSettingsWindow();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Returns the main stage.
@@ -82,25 +85,32 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("view/SettingsLayout.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
-            // Create the settings stage
-            Stage settingsStage = new Stage();
-            settingsStage.setTitle(messages.getString("key.settings"));
-            settingsStage.initModality(Modality.WINDOW_MODAL);
-            settingsStage.initOwner(primaryStage);
+            Stage appSettingStage = new Stage();
+            appSettingStage.setTitle(messages.getString("key.settings"));
+            appSettingStage.initModality(Modality.WINDOW_MODAL);
+            appSettingStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            appSettingStage.setScene(scene);
 
-            //Set the settings into the controller.
             SettingsLayoutController controller = loader.getController();
-            controller.setSettingsStage(settingsStage);
+            controller.setSettingsStage(appSettingStage);
 
-            // Show the window settings and wait util the user closes it
-            settingsStage.showAndWait();
+            appSettingStage.showAndWait();
+
 
             return controller.isOkClicked();
         } catch (IOException e){
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Called when user clicks on Settings
+     */
+    @FXML
+    private void handleSettings(){
+        showSettingsWindow();
     }
 
 }
