@@ -36,6 +36,7 @@ public class MainApp extends Application {
 
         initRootLayout();
 
+
     }
 
     /**
@@ -57,11 +58,7 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            // Load the controller
-            MenuBarController menuBarController = loader.getController();
-            menuBarController.setMainApp(this);
-
-
+            showSettingsWindow();
 
         } catch (IOException e) {
             e.printStackTrace();
