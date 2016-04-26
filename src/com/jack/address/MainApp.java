@@ -60,7 +60,9 @@ public class MainApp extends Application {
             // Load the controller
             MenuBarController menuBarController = loader.getController();
             menuBarController.setMainApp(this);
-            
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
