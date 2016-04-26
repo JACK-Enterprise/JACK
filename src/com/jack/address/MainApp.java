@@ -5,6 +5,7 @@ package com.jack.address;/**
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import com.jack.address.view.AboutController;
 import com.jack.address.view.MenuBarController;
 import com.jack.address.view.SettingsLayoutController;
 import javafx.application.Application;
@@ -15,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Main class for loading the Jack app
@@ -58,9 +60,10 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            // Get the controller
+            // Get the controller for the menu
             MenuBarController menuBarController = loader.getController();
             menuBarController.setMainApp(this);
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,6 +105,31 @@ public class MainApp extends Application {
 
             return controller.isOkClicked();
         } catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showAboutWindow(){
+        try{
+            // Load FXML file
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("view/AboutLayout.fxml"));
+            AnchorPane page = loader.load();
+
+            // Creating the Stage
+            Stage aboutStage = new Stage();
+            aboutStage.initModality(Modality.WINDOW_MODAL);
+            aboutStage.initStyle(StageStyle.UNDECORATED);
+            Scene scene = new Scene(page);
+
+            AboutController aboutController = loader.getController();
+            aboutController.setAboutStage(aboutStage);
+            aboutStage.showAndWait();
+
+            return aboutController.isClicked();
+        }catch (IOException e){
             e.printStackTrace();
             return false;
         }

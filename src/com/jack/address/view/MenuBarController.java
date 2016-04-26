@@ -49,4 +49,9 @@ public class MenuBarController {
     private void handleSettings(){
         boolean okClicked = mainApp.showSettingsWindow();
     }
+
+    @FXML
+    private void handleAbout(){
+        boolean clicked = mainApp.showAboutWindow();
+    }
 }
