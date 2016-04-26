@@ -38,7 +38,6 @@ public class MainApp extends Application {
 
         initRootLayout();
 
-
     }
 
     /**
@@ -121,8 +120,9 @@ public class MainApp extends Application {
             // Creating the Stage
             Stage aboutStage = new Stage();
             aboutStage.initModality(Modality.WINDOW_MODAL);
-            aboutStage.initStyle(StageStyle.UNDECORATED);
+            aboutStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
+            aboutStage.setScene(scene);
 
             AboutController aboutController = loader.getController();
             aboutController.setAboutStage(aboutStage);
@@ -133,14 +133,6 @@ public class MainApp extends Application {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * Called when user clicks on Settings
-     */
-    @FXML
-    private void handleSettings(){
-        showSettingsWindow();
     }
 
 }
