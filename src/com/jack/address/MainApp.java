@@ -81,6 +81,11 @@ public class MainApp extends Application {
         launch(args);
     }
 
+    /**
+     * Show the App Settings Window from the FXML.
+     * Returns a boolean
+     * @return
+     */
     public boolean showSettingsWindow(){
         try {
             // Load fxml file and create anew stage for the window setting
@@ -109,6 +114,11 @@ public class MainApp extends Application {
         }
     }
 
+    /**
+     * Show the About Window from the FXML
+     * Returns a boolean
+     * @return
+     */
     public boolean showAboutWindow(){
         try{
             // Load FXML file
