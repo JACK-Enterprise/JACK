@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.jackent.jack.annotationparser;
+package com.jack.annotationparser;
 
+import com.jack.annotationparser.AnnotationFunctionBinder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
