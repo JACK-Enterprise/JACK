@@ -1,8 +1,11 @@
 package com.jack.address.view;
 
+import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import com.jack.address.MainApp;
+import java.awt.*;
+import java.net.URI;
+
 
 /**
  * Created by Maxime on 26/04/2016.
@@ -44,5 +47,11 @@ public class AboutController {
     private void handleClick(){
         clicked = true;
         aboutStage.close();
+    }
+
+    @FXML
+    private void handleLink() throws Exception{
+        URI uri = new URI("https://github.com/JACK-Enterprise");
+        java.awt.Desktop.getDesktop().browse(uri);
     }
 }
