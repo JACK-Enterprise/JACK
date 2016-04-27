@@ -16,7 +16,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="%key.settings" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" text="%key.quit" />
+              <MenuItem mnemonicParsing="false" onAction="#handleExit" text="%key.quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="%key.edit" />

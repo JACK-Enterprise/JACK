@@ -9,6 +9,7 @@ import com.jack.address.view.AboutController;
 import com.jack.address.view.MenuBarController;
 import com.jack.address.view.SettingsLayoutController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -81,11 +82,6 @@ public class MainApp extends Application {
         launch(args);
     }
 
-    /**
-     * Show the App Settings Window from the FXML.
-     * Returns a boolean
-     * @return
-     */
     public boolean showSettingsWindow(){
         try {
             // Load fxml file and create anew stage for the window setting
@@ -114,11 +110,6 @@ public class MainApp extends Application {
         }
     }
 
-    /**
-     * Show the About Window from the FXML
-     * Returns a boolean
-     * @return
-     */
     public boolean showAboutWindow(){
         try{
             // Load FXML file
@@ -144,5 +135,9 @@ public class MainApp extends Application {
             return false;
         }
     }
+
+    public void cancelRequest(){
+        Platform.exit();
+   }
 
 }

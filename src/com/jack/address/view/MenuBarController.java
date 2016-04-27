@@ -4,6 +4,7 @@ package com.jack.address.view;
  * Created by Maxime on 22/04/2016.
  */
 
+import com.sun.deploy.config.Platform;
 import com.sun.glass.ui.MenuBar;
 import com.sun.javaws.Main;
 import javafx.fxml.FXML;
@@ -45,6 +46,7 @@ public class MenuBarController {
         this.mainApp = mainApp;
     }
 
+
     @FXML
     private void handleSettings(){
         boolean okClicked = mainApp.showSettingsWindow();
@@ -53,5 +55,10 @@ public class MenuBarController {
     @FXML
     private void handleAbout(){
         boolean clicked = mainApp.showAboutWindow();
+    }
+
+    @FXML
+    private void handleExit(){
+        mainApp.cancelRequest();
     }
 }
