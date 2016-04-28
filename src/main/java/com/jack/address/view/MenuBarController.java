@@ -4,9 +4,7 @@ package com.jack.address.view;
  * Created by Maxime on 22/04/2016.
  */
 
-import com.sun.deploy.config.Platform;
 import com.sun.glass.ui.MenuBar;
-import com.sun.javaws.Main;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
 

@@ -52,7 +52,7 @@ public class MainApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(messages);
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
@@ -87,7 +87,7 @@ public class MainApp extends Application {
             // Load fxml file and create anew stage for the window setting
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(messages);
-            loader.setLocation(MainApp.class.getResource("view/SettingsLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("/view/SettingsLayout.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
             Stage appSettingStage = new Stage();
@@ -115,7 +115,7 @@ public class MainApp extends Application {
             // Load FXML file
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(messages);
-            loader.setLocation(MainApp.class.getResource("view/AboutLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("/view/AboutLayout.fxml"));
             AnchorPane page = loader.load();
 
             // Creating the Stage
