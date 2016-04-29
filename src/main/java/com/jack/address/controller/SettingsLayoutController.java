@@ -1,14 +1,10 @@
-package com.jack.address.view;
+package com.jack.address.controller;
 
 /**
  * Created by Maxime on 22/04/2016.
  */
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TextField;
-import com.jack.address.MainApp;
 import javafx.stage.Stage;
 
 

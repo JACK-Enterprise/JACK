@@ -5,19 +5,17 @@ package com.jack.address;/**
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import com.jack.address.view.AboutController;
-import com.jack.address.view.MenuBarController;
-import com.jack.address.view.SettingsLayoutController;
+import com.jack.address.controller.AboutController;
+import com.jack.address.controller.MenuBarController;
+import com.jack.address.controller.SettingsLayoutController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * Main class for loading the Jack app

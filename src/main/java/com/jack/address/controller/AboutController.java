@@ -1,9 +1,8 @@
-package com.jack.address.view;
+package com.jack.address.controller;
 
-import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import java.awt.*;
+
 import java.net.URI;
 
 

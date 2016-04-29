@@ -1,4 +1,4 @@
-package com.jack.address.view;
+package com.jack.address.controller;
 
 /**
  * Created by Maxime on 22/04/2016.
