@@ -37,12 +37,15 @@ public class WMSImageryProvider {
         this.url = url;
         this.layers = layers;
         this.defaultParameters = new DefaultParameters();
+        buildGetCapabilitiesUrl();
+
     }
 
     private void buildGetCapabilitiesUrl(){
-        String url = this.url + "?SERVICE={service}&VERSION={version}&REQUEST=GetCapabilities";
-        url.replace("{service}", defaultParameters.getService());
-        url.replace("{version}", defaultParameters.getVersion());
+        String url = this.url + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
+        System.out.println(url);
+       // url.replace("{service}", defaultParameters.getService());
+        //url.replace("{version}", defaultParameters.getVersion());
 
         try{
             getCapabilities = new URL(url);
@@ -52,7 +55,7 @@ public class WMSImageryProvider {
         }
     }
 
-    private void GetCapabilities() throws IOException{
+    public void GetCapabilities() throws IOException{
 
         HttpURLConnection connection = (HttpURLConnection)getCapabilities.openConnection();
         connection.setRequestMethod("GET");
@@ -60,6 +63,6 @@ public class WMSImageryProvider {
 
         InputStream xml = connection.getInputStream();
 
-        System.out.print(xml.toString());
+        System.out.print(xml);
     }
 }

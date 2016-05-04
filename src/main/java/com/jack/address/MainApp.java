@@ -17,6 +17,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import com.jack.wms.*;
+
 /**
  * Main class for loading the Jack app
  */
@@ -37,6 +39,12 @@ public class MainApp extends Application {
 
         initRootLayout();
 
+        WMSImageryProvider wms = new WMSImageryProvider("http://www.geosignal.org/cgi-bin/wmsmap", "layer");
+        try {
+            wms.GetCapabilities();
+        } catch (IOException e) {
+
+        }
     }
 
     /**
