@@ -5,10 +5,37 @@ package com.jack.wms;
  */
 public class DefaultParameters {
 
-    static String service = "WMS";
-    static String version = "1.1.1";
-    static String request = "GetMap";
-    static String style = "";
-    static String format = "image/jpeg";
+     private String service;
+     private String version;
+     private String request;
+     private String style;
+     private String format;
 
+    public DefaultParameters(){
+        service = "WMS";
+        version = "1.1.1";
+        request = "GetMap";
+        style = "";
+        format = "image/jpeg";
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public String getFormat() {
+        return format;
+    }
 }
