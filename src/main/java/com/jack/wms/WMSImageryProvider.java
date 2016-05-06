@@ -8,8 +8,10 @@ import jdk.internal.org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,6 +65,15 @@ public class WMSImageryProvider {
 
         InputStream xml = connection.getInputStream();
 
-        System.out.print(xml);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(xml));
+        String sLine;
+
+        while((sLine = reader.readLine()) != null){
+            System.out.print(sLine);
+        }
+
+        connection.disconnect();
+
+
     }
 }
