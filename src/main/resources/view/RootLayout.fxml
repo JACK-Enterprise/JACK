@@ -20,7 +20,10 @@
               <MenuItem mnemonicParsing="false" onAction="#handleExit" text="%key.quit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="%key.edit" />
+          <Menu mnemonicParsing="false" text="%key.edit">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleGetCapabilities" text="%key.getCapabilities" />
+               </items></Menu>
             <Menu mnemonicParsing="false" text="%key.plugin">
               <items>
                   <MenuItem mnemonicParsing="false" text="%key.plugin.manager" />
