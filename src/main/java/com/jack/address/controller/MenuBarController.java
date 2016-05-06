@@ -7,16 +7,6 @@ package com.jack.address.controller;
 import com.sun.glass.ui.MenuBar;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import sun.security.tools.policytool.Resources;
-
-import java.util.ResourceBundle;
 
 /**
  * The controller class for the MenuBar
@@ -73,9 +63,9 @@ public class MenuBarController {
     @FXML
     private void handleGetCapabilities(){
 
-        GetCapabilitiesWindow getCapabilitiesWindow = new GetCapabilitiesWindow();
+        GetCapabilitiesController getCapabilitiesController = new GetCapabilitiesController();
 
-        getCapabilitiesWindow.initView();
+        getCapabilitiesController.initView();
 
 
 
