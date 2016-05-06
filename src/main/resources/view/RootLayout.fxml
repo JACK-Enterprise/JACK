@@ -42,7 +42,7 @@
       <TabPane prefHeight="85.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab text="Untitled Tab 1" />
-          <Tab text="Untitled Tab 2" />
+          <Tab text="%key.console" />
         </tabs>
       </TabPane>
    </bottom>
