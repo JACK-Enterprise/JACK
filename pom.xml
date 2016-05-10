@@ -23,6 +23,7 @@
 		<powermock-module-junit4.version>1.5</powermock-module-junit4.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<jaxb.version>2.2.4</jaxb.version> 
 	</properties>
 
 	<dependencyManagement>
@@ -80,10 +81,21 @@
 				<version>${powermock-module-junit4.version}</version>
 				<scope>test</scope>
 			</dependency>
+					
+			<dependency> 
+				<groupId>javax.xml.bind</groupId> 
+				<artifactId>jaxb-api</artifactId>
+				<version>${jaxb.version}</version> 
+			</dependency> 
+
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
+			<dependency> 
+				<groupId>javax.xml.bind</groupId> 
+				<artifactId>jaxb-api</artifactId>
+			</dependency> 	
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
