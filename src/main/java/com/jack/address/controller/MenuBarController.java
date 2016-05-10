@@ -63,11 +63,5 @@ public class MenuBarController {
     @FXML
     private void handleGetCapabilities(){
 
-        GetCapabilitiesController getCapabilitiesController = new GetCapabilitiesController();
-
-        getCapabilitiesController.initView();
-
-
-
     }
 }

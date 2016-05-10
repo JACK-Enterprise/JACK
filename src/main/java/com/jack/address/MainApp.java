@@ -38,13 +38,13 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("JACK");
 
         initRootLayout();
-/*
+
         WMSImageryProvider wms = new WMSImageryProvider("http://www.geosignal.org/cgi-bin/wmsmap", "layer");
         try {
             wms.GetCapabilities();
         } catch (IOException e) {
 
-        }*/
+        }
     }
 
     /**

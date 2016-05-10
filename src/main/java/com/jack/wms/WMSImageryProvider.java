@@ -68,9 +68,14 @@ public class WMSImageryProvider {
         BufferedReader reader = new BufferedReader(new InputStreamReader(xml));
         String sLine;
 
+        System.out.print(xml);
+
+        String result = "";
         while((sLine = reader.readLine()) != null){
-            System.out.print(sLine);
+
+            result = result + sLine + '\n';
         }
+     //   System.out.print(result);
 
         connection.disconnect();
 
