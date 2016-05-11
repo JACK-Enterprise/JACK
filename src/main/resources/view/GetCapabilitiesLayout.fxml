@@ -14,13 +14,13 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Pane />
-                  <TextField alignment="CENTER" promptText="%key.enter.url" />
+                  <TextField fx:id="textUrl" alignment="CENTER" promptText="%key.enter.url" />
                   <Pane />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Button defaultButton="true" mnemonicParsing="false" text="%key.submit" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSendButton" text="%key.submit" />
                   <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancelButton" text="%key.cancel" />
                </children>
             </HBox>
