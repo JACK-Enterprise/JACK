@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.jack.address.controller.AboutController;
+import com.jack.address.controller.GetCapabilitiesController;
 import com.jack.address.controller.MenuBarController;
 import com.jack.address.controller.SettingsLayoutController;
 import javafx.application.Application;
@@ -116,6 +117,10 @@ public class MainApp extends Application {
         }
     }
 
+    /**
+     * Load and display the About window
+     * @return
+     */
     public boolean showAboutWindow(){
         try{
             // Load FXML file
@@ -142,7 +147,32 @@ public class MainApp extends Application {
         }
     }
 
+    public boolean showCapabilitiesWindow(){
+        try{
+            // Load XML File
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("/view/GetCapabilities.fxml"));
+            AnchorPane page = loader.load();
 
+            // Create the Stage
+            Scene scene = new Scene(page);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setScene(scene);
+
+            GetCapabilitiesController controller = new GetCapabilitiesController();
+            controller.setStage(stage);
+            stage.showAndWait();
+
+            return controller.isClick();
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public void cancelRequest(){
         Platform.exit();
    }
