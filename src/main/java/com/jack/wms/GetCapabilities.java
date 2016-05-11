@@ -55,14 +55,13 @@ public class GetCapabilities {
         BufferedReader reader = new BufferedReader(new InputStreamReader(xml));
         String sLine;
 
-        System.out.print(xml);
 
         String result = "";
         while ((sLine = reader.readLine()) != null) {
 
             result = result + sLine + '\n';
         }
-        //   System.out.print(result);
+        System.out.print(result);
 
         connection.disconnect();
 
