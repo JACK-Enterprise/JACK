@@ -152,7 +152,7 @@ public class MainApp extends Application {
             // Load XML File
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(messages);
-            loader.setLocation(MainApp.class.getResource("/view/GetCapabilities.fxml"));
+            loader.setLocation(MainApp.class.getResource("/view/GetCapabilitiesLayout.fxml"));
             AnchorPane page = loader.load();
 
             // Create the Stage
@@ -162,9 +162,12 @@ public class MainApp extends Application {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setScene(scene);
 
-            GetCapabilitiesController controller = new GetCapabilitiesController();
+            System.out.println(stage.toString());
+
+            GetCapabilitiesController controller = loader.getController();
             controller.setStage(stage);
             stage.showAndWait();
+
 
             return controller.isClick();
         }catch (IOException e){
@@ -172,7 +175,7 @@ public class MainApp extends Application {
             return false;
         }
     }
-    
+
     public void cancelRequest(){
         Platform.exit();
    }

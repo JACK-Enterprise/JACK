@@ -7,22 +7,27 @@ import javafx.stage.Stage;
  * Created by Maxime on 11/05/2016.
  */
 public class GetCapabilitiesController {
-    private Stage stage;
-    private boolean click;
+
+    private Stage GetCapabilitiesStage;
+    private boolean click = false;
+
 
     @FXML
-    public void initialize(){
+    private void initialize(){
 
     }
 
     @FXML
-    public void handleCancelButton(){
+    private void handleCancelButton(){
         click = true;
-        stage.close();
+        GetCapabilitiesStage.close();
     }
+
 
     public void setStage(Stage stage){
-        this.stage = stage;
+
+        this.GetCapabilitiesStage = stage;
+
     }
 
     public boolean isClick(){
