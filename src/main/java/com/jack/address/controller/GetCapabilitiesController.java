@@ -9,6 +9,8 @@ import javafx.stage.Stage;
  */
 public class GetCapabilitiesController {
     private Stage stage;
+    private boolean click;
+
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -22,6 +24,13 @@ public class GetCapabilitiesController {
         stage.close();
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public boolean isClick(){
+        return this.click;
+    }
 
 
 
