@@ -147,22 +147,26 @@ public class MainApp extends Application {
         try{
             // Load XML file
             FXMLLoader loader = new FXMLLoader();
-            loader .setResources(messages);
+            loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("/view/GetCapabilitiesLayout.fxml"));
             AnchorPane pane = loader.load();
 
             // Creating the Stage
-            Stage getCapabilitiesStage = new Stage();
-            getCapabilitiesStage.initModality(Modality.WINDOW_MODAL);
-            getCapabilitiesStage.setTitle("GetCapabilities Checker");
             Scene scene = new Scene(pane);
-            getCapabilitiesStage.setScene(scene);
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(primaryStage);
+            stage.setTitle("GetCapabilities Checker");
+            stage.setScene(scene);
 
             GetCapabilitiesController gpC = new GetCapabilitiesController();
-            gpC.setStage(getCapabilitiesStage);
-            getCapabilitiesStage.showAndWait();
+            if(gpC == null){
+                System.out.println('\n' + "FALSE");
+            }
+            gpC.setStage(stage);
+            stage.showAndWait();
 
-            return gpC.isClick();
+            return gpC.isCancelClick();
         }catch (IOException e){
             e.printStackTrace();
             return false;

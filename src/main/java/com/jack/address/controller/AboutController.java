@@ -19,7 +19,7 @@ public class AboutController {
      * after the fxml file has been loaded.
      */
     @FXML
-    private  void initialize(){
+    private void initialize(){
 
     }
 

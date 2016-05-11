@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane maxHeight="80.0" maxWidth="500.0" minHeight="78.0" minWidth="300.0" prefHeight="78.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.GetCapabilitiesController">
    <children>
       <VBox alignment="CENTER" layoutX="229.0" layoutY="34.0" prefHeight="366.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -22,7 +21,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Button defaultButton="true" mnemonicParsing="false" text="%key.submit" />
-                  <Button cancelButton="true" mnemonicParsing="false" text="%key.cancel" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="%key.cancel" />
                </children>
             </HBox>
          </children>
