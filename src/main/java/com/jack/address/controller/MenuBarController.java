@@ -62,7 +62,6 @@ public class MenuBarController {
 
     @FXML
     private void handleGetCapabilities(){
-        mainApp.showGetCapabilitiesWindow();
 
     }
 }

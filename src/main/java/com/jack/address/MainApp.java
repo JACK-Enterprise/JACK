@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.jack.address.controller.AboutController;
-import com.jack.address.controller.GetCapabilitiesController;
 import com.jack.address.controller.MenuBarController;
 import com.jack.address.controller.SettingsLayoutController;
 import javafx.application.Application;
@@ -17,8 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import com.jack.wms.*;
 
 /**
  * Main class for loading the Jack app
@@ -40,12 +37,14 @@ public class MainApp extends Application {
 
         initRootLayout();
 
+        /*
         WMSImageryProvider wms = new WMSImageryProvider("http://www.geosignal.org/cgi-bin/wmsmap", "layer");
         try {
             wms.GetCapabilities();
         } catch (IOException e) {
 
         }
+        */
     }
 
     /**
@@ -143,35 +142,6 @@ public class MainApp extends Application {
         }
     }
 
-    public boolean showGetCapabilitiesWindow(){
-        try{
-            // Load XML file
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(messages);
-            loader.setLocation(MainApp.class.getResource("/view/GetCapabilitiesLayout.fxml"));
-            AnchorPane pane = loader.load();
-
-            // Creating the Stage
-            Scene scene = new Scene(pane);
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(primaryStage);
-            stage.setTitle("GetCapabilities Checker");
-            stage.setScene(scene);
-
-            GetCapabilitiesController gpC = new GetCapabilitiesController();
-            if(gpC == null){
-                System.out.println('\n' + "FALSE");
-            }
-            gpC.setStage(stage);
-            stage.showAndWait();
-
-            return gpC.isCancelClick();
-        }catch (IOException e){
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public void cancelRequest(){
         Platform.exit();
