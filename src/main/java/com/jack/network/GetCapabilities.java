@@ -1,7 +1,10 @@
 package com.jack.network;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,8 +26,10 @@ public class GetCapabilities {
 
 
     public void getCapabilities() throws IOException{
+        XMLWebService connection = new XMLWebService(url);
+        StringBuilder xml = connection.getXMLFromHTTP();
 
-
+        System.out.println(xml);
     }
 
     public void buildUrl(String service, String version){

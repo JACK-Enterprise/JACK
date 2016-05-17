@@ -13,19 +13,34 @@ import java.net.URL;
  */
 public class XMLWebService {
 
-    private String uri;
     private URL url;
 
-    private void getXMLFromHTTP() throws IOException {
+    public XMLWebService(URL url){
+        this.url = url;
+    }
 
+    public XMLWebService(){
+
+    }
+
+    public StringBuilder getXMLFromHTTP() throws IOException {
+
+        StringBuilder xmlString = new StringBuilder();
+        String tmp;
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/xml");
-
         InputStream xml = connection.getInputStream();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(xml));
+
+        while((tmp = reader.readLine()) != null){
+
+            xmlString.append(tmp + '\n');
+        }
 
         connection.disconnect();
 
-
+        return xmlString;
     }
 }
