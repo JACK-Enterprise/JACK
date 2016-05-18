@@ -24,10 +24,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jaxb.version>2.2.4</jaxb.version> 
+		<lwjgl.version>3.0.0b</lwjgl.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.lwjgl</groupId>
+				<artifactId>lwjgl</artifactId>
+				<version>${lwjgl.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -92,6 +98,10 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+		</dependency>
 			<dependency> 
 				<groupId>javax.xml.bind</groupId> 
 				<artifactId>jaxb-api</artifactId>

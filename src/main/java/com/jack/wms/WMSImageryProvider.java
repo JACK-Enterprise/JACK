@@ -1,13 +1,10 @@
 package com.jack.wms;
 
+
+
 import static com.jack.core.StdDevLib.*;
 import com.jack.core.Description;
 import com.jack.core.DeveloperError;
-
-import javax.management.Query;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -50,7 +47,5 @@ public class WMSImageryProvider {
 
 
     }
-
-
 
 }
