@@ -25,6 +25,7 @@ public class JackMath {
     private static double EPSILON18 = 0.000000000000000001;
     private static double EPSILON19 = 0.0000000000000000001;
     private static double EPSILON20 = 0.00000000000000000001;
+    public static  double TWO_PI = 2.0 * Math.PI;
 
     public static double getEPSILON1() {
         return EPSILON1;

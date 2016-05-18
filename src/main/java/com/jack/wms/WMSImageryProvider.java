@@ -1,12 +1,13 @@
 package com.jack.wms;
 
+import static com.jack.core.StdDevLib.*;
 import com.jack.core.Description;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import com.jack.core.DeveloperError;
+
+import javax.management.Query;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -19,58 +20,37 @@ public class WMSImageryProvider {
     private String layers;
     private DefaultParameters defaultParameters;
     private URL templateURL;
-    private URL getCapabilities;
+
 
     public WMSImageryProvider(Description description) {
+
+        description = defaultValue(description, new Description());
+        if(!defined(description.url)) {
+            DeveloperError error = new DeveloperError("Error: URL is required");
+        }
+        if(!defined(description.layers)){
+            DeveloperError error = new DeveloperError("Error: Layers is required");
+        }
+
         this.url = description.url;
         this.layers = description.layers;
         this.defaultParameters = new DefaultParameters();
     }
 
     public WMSImageryProvider(String url, String layers) {
+
         this.url = url;
         this.layers = layers;
         this.defaultParameters = new DefaultParameters();
-        buildGetCapabilitiesUrl();
 
     }
 
-    private void buildGetCapabilitiesUrl(){
-        String url = this.url + "?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
-        System.out.println(url);
-       // url.replace("{service}", defaultParameters.getService());
-        //url.replace("{version}", defaultParameters.getVersion());
+    private void buildUrl() {
 
-        try{
-            getCapabilities = new URL(url);
-        }
-        catch (MalformedURLException e){
-
-        }
-    }
-
-    public void GetCapabilities() throws IOException{
-
-        HttpURLConnection connection = (HttpURLConnection)getCapabilities.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/xml");
-
-        InputStream xml = connection.getInputStream();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(xml));
-        String sLine;
-
-        System.out.print(xml);
-
-        String result = "";
-        while((sLine = reader.readLine()) != null){
-
-            result = result + sLine + '\n';
-        }
-     //   System.out.print(result);
-
-        connection.disconnect();
 
 
     }
+
+
+
 }
