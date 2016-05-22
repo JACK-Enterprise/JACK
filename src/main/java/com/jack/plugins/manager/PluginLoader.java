@@ -1,37 +1,62 @@
 package com.jack.plugins.manager;
 
+import com.jack.annotationparser.AnnotationBinder;
+import com.jack.annotationparser.AnnotationFunctionBinder;
+import com.jack.annotationparser.AnnotationInterpreter;
+import com.jack.annotationparser.AnnotationParser;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Plugin Loader class that is in charge of loading plugins from Jar files
  * @author Aurelien
  */
 @Slf4j
+@AllArgsConstructor
 public class PluginLoader {
 
-	private String path;
+	@Getter private String path;
+        private List<AnnotationFunctionBinder> functionBinders;
 	
-	public PluginLoader(String path){
-            this.path = path;
-	}
-	
-	public PluginBase load() {
+	public ArrayList<Plugin> load() {
 		
             ArrayList<Class> classes = this.initializeLoader();
-            PluginBase plugin = null;
+            ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 
-            /** TO DO : PARSE PLUGIN **/
+            classes.stream().forEach((Class object) -> {
+                Class c = (Class) object;
+                PluginDescription description = getDescription(c);
+                
+                if(description != null)
+                {
+                    parseAnnotations(c);
+                    if(PluginBase.class.isAssignableFrom(c))
+                    {
+                        try {
+                            PluginBase base = (PluginBase) c.newInstance();
+                            plugins.add(new Plugin(base, description));
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            log.warn("Could not instantiate class " + c);
+                        }
+                    }
+                }
+            });
             
-            return plugin;	
+            return plugins;
 	}
 	
 	private ArrayList<Class> initializeLoader(){
@@ -60,7 +85,7 @@ public class PluginLoader {
                         if(tmpClass != null) {
                             classes.add(tmpClass);
                         }
-                    } catch(ClassNotFoundException e) {
+                    } catch(ClassNotFoundException | java.lang.IncompatibleClassChangeError e) {
                         log.warn("Class " + tmp + "could not be loaded !");
                     }
                 }
@@ -68,5 +93,26 @@ public class PluginLoader {
             return classes;
 	}
 	
+        private void parseAnnotations(Class c) {
+            AnnotationParser parser = new AnnotationParser(c);
+            List<AnnotationBinder> binders = parser.parse();
+
+            AnnotationInterpreter interpreter = new AnnotationInterpreter(binders, functionBinders);
+
+            interpreter.run();
+        }
+        
+        private PluginDescription getDescription(Class c) {
+            Annotation descriptor = c.getAnnotation(PluginDescriptor.class);
+            PluginDescriptorBinder descriptorBinder = new PluginDescriptorBinder();
+            PluginDescription description = null;
+            if(descriptor != null)
+            {
+                description = (PluginDescription) descriptorBinder.run(c, descriptor);
+            }
+            
+            return description;
+            
+        }
 	
 }

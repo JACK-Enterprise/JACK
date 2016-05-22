@@ -69,22 +69,25 @@ public class AnnotationInterpreter {
         if(annotation != null) {
             Class annotationType = annotation.annotationType();
             for(AnnotationFunctionBinder functionBinder : functionBinders) {
-                runCorrespondingCode(functionBinder, annotationType, targetElement, annotation);
+                runSingle(functionBinder, annotationType, targetElement, annotation);
             }
         }
     }
     
-    private void runCorrespondingCode(AnnotationFunctionBinder functionBinder, 
+    public Object runSingle(AnnotationFunctionBinder functionBinder, 
                                         Class annotationType, 
                                         AnnotatedElement targetElement,
                                         Annotation annotation) {
+        Object output = null;
         if(functionBinder != null) {
             Class functionAnnotationType = functionBinder.getType();
 
             if(annotationType != null && annotationType.equals(functionAnnotationType))
             {
-                functionBinder.run(targetElement);
+                output = functionBinder.run(targetElement, annotation);
             }
         }
+        
+        return output;
     }
 }
