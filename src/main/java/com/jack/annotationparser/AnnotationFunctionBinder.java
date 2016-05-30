@@ -7,6 +7,8 @@ package com.jack.annotationparser;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -23,9 +25,10 @@ public abstract class AnnotationFunctionBinder implements Annotation {
      * Running function that is called on found annotations
      * 
      * @param element Reflected element that uses the given annotation
-     */
-    public void run(AnnotatedElement element) {
-        
+     * @param annotation The annotation that has been detected
+     */    
+    public Object run(AnnotatedElement element, Annotation annotation) {
+        return null;
     }
     
     /**
