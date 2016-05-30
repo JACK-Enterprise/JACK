@@ -9,12 +9,14 @@ import com.jack.address.controller.AboutController;
 import com.jack.address.controller.GetCapabilitiesController;
 import com.jack.address.controller.MenuBarController;
 import com.jack.address.controller.SettingsLayoutController;
+import com.jack.engine.SimpleEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -61,11 +63,25 @@ public class MainApp extends Application {
             loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
+            SimpleEngine se = new SimpleEngine();
+
+
+            StackPane stackPane = new StackPane(se.initScene());
+            se.setStackPane(stackPane);
+            se.setSize();
+            se.handleRotation();
+
+
+
+            rootLayout.setCenter(stackPane);
+
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
+
             primaryStage.setScene(scene);
             primaryStage.show();
+            //earthViewer.rotateAroundYAxis(stackPane).play();
 
             // Get the controller for the menu
             MenuBarController menuBarController = loader.getController();
