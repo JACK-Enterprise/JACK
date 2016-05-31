@@ -3,6 +3,7 @@ package com.jack.engine;
 
 
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -30,6 +31,7 @@ public class SimpleEngine {
 
     private static final double MAP_WIDTH = 8192 / 2d;
     private static final double MAP_HEIGHT = 4092 / 2d;
+    private double i = 0;
 
     private double angleZ;
     private double angleY;
@@ -43,16 +45,16 @@ public class SimpleEngine {
     private StackPane stackPane;
     private SubScene subScene;
     private PhongMaterial blueMaterial;
-
-
-
-
+    private double lastMouseX;
+    private double lastMouseY;
+    private double totalXAngle;
+    private double totalYAngle;
 
     public SimpleEngine() {
 
         angleZ = 0;
         angleY = 0;
-        motionSensitivity = 0.00003;
+        motionSensitivity = 0.003;
 
         camera = new PerspectiveCamera(true);
         earth = new Sphere(5);
@@ -130,7 +132,34 @@ public class SimpleEngine {
         group.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-
+                double xrel = (lastMouseX - event.getX()) * 0.3;
+                double yrel = (lastMouseY - event.getY())* 0.3;
+                
+                totalXAngle += xrel;
+                totalYAngle += yrel;
+                
+                if(totalYAngle > 90)
+                {
+                    totalYAngle = 90;
+                }
+                else if(totalYAngle < -90)
+                {
+                    totalYAngle = -90;
+                }
+                
+                earth.getTransforms().clear();
+                earth.getTransforms().add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
+                earth.getTransforms().add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
+                lastMouseX = event.getX();
+                lastMouseY = event.getY();
+            }
+        });
+        
+        group.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                lastMouseX = event.getX();
+                lastMouseY = event.getY();
             }
         });
 
@@ -145,6 +174,7 @@ public class SimpleEngine {
     }
 
     public void handleRotation() {
+        
     }
 
 }
