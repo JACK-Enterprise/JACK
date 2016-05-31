@@ -2,6 +2,7 @@ package com.jack.engine;
 
 
 
+import com.jack.engine.camera.TrackBallCamera;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Camera;
@@ -38,7 +39,7 @@ public class SimpleEngine {
     private double motionSensitivity;
 
 
-    private Camera camera;
+    private TrackBallCamera camera;
     private Sphere earth;
 
     private Box box;
@@ -56,7 +57,7 @@ public class SimpleEngine {
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new PerspectiveCamera(true);
+        camera = new TrackBallCamera(0, 0, -20);
         earth = new Sphere(5);
 
         blueMaterial = new PhongMaterial();
@@ -112,13 +113,6 @@ public class SimpleEngine {
 
     public Group initScene(){
         Group root = new Group();
-        camera.setFarClip(10000);
-        camera.setNearClip(0.1);
-        camera.getTransforms().addAll(
-                new Rotate(0, Rotate.Y_AXIS),
-                new Rotate(0, Rotate.X_AXIS),
-                new Translate(0, 0, -20));
-
 
         root.getChildren().add(camera);
         root.getChildren().add(earth);
@@ -128,40 +122,8 @@ public class SimpleEngine {
         subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
         Group group = new Group(subScene);
-
-        group.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double xrel = (lastMouseX - event.getX()) * 0.3;
-                double yrel = (lastMouseY - event.getY())* 0.3;
-                
-                totalXAngle += xrel;
-                totalYAngle += yrel;
-                
-                if(totalYAngle > 90)
-                {
-                    totalYAngle = 90;
-                }
-                else if(totalYAngle < -90)
-                {
-                    totalYAngle = -90;
-                }
-                
-                earth.getTransforms().clear();
-                earth.getTransforms().add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
-                earth.getTransforms().add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
-                lastMouseX = event.getX();
-                lastMouseY = event.getY();
-            }
-        });
         
-        group.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                lastMouseX = event.getX();
-                lastMouseY = event.getY();
-            }
-        });
+        camera.bindOn(group);
 
         return group;
 
