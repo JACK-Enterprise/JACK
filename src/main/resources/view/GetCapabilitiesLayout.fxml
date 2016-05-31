@@ -21,7 +21,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSendButton" text="%key.submit" />
-                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancelButton" text="%key.cancel" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancelButton" text="%key.close" />
                </children>
             </HBox>
          </children>

@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -60,9 +61,9 @@ public class SimpleEngine {
         camera = new TrackBallCamera(0, 0, -20);
         earth = new Sphere(5);
 
-        blueMaterial = new PhongMaterial();
-        blueMaterial.setDiffuseColor(Color.BLUE);
-       // earth.setDrawMode(DrawMode.LINE);
+        //blueMaterial = new PhongMaterial();
+       // blueMaterial.setDiffuseColor(Color.BLUE);
+        //earth.setDrawMode(DrawMode.LINE);
        // blueMaterial.setSpecularColor(Color.LIGHTBLUE);
 ;
 

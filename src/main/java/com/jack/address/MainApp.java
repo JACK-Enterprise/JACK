@@ -176,6 +176,7 @@ public class MainApp extends Application {
             Stage stage = new Stage();
             stage.initOwner(primaryStage);
             stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle(messages.getString("key.getCapabilities"));
             stage.setScene(scene);
 
             System.out.println(stage.toString());
