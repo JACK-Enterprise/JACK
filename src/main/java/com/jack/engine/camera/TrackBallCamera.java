@@ -121,6 +121,15 @@ public class TrackBallCamera extends PerspectiveCamera {
 
                 setFieldOfView(fov);
                 moveSensitivity -= moveSensitivity * event.getDeltaY()*zoomSensitivity;
+                
+                if(moveSensitivity > 0.4)
+                {
+                    moveSensitivity = 0.4;
+                }
+                else if(moveSensitivity < 0.0001)
+                {
+                    moveSensitivity = 0.0001;
+                }
             }
         };
     }
