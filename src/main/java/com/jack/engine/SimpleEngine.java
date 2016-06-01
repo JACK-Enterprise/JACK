@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Sphere;
 
@@ -41,7 +42,7 @@ public class SimpleEngine {
     private Skybox skybox;
     private LightBase sunLight;
     private LightBase ambientLight;
-    private Ellipse atmosphere;
+    private Sphere atmosphere;
 
     private Box box;
     private StackPane stackPane;
@@ -73,14 +74,13 @@ public class SimpleEngine {
         ambientLight.setTranslateX(20);
         ambientLight.setTranslateZ(20);
 
-        //blueMaterial = new PhongMaterial();
-       // blueMaterial.setDiffuseColor(Color.BLUE);
-        //earth.setDrawMode(DrawMode.LINE);
-       // blueMaterial.setSpecularColor(Color.LIGHTBLUE);
+        blueMaterial = new PhongMaterial();
+        blueMaterial.setDiffuseColor(Color.color(0, 0.2, 0.5, 0.1));
 ;
 
-        atmosphere = new Ellipse(5.1,5.1);
-        atmosphere.setFill(Color.LIGHTBLUE);
+        atmosphere = new Sphere(5.2);
+        atmosphere.setDrawMode(DrawMode.FILL);
+        atmosphere.setMaterial(blueMaterial);
 
         PhongMaterial earthMaterial = new PhongMaterial();
         earthMaterial.setDiffuseMap(
