@@ -42,12 +42,15 @@ public class SimpleEngine {
     private Skybox skybox;
     private LightBase sunLight;
     private LightBase ambientLight;
-    private Sphere atmosphere;
+    private Sphere blueAtmosphere;
+    private Sphere whiteAtmosphere;
+
+    private PhongMaterial blueMaterial;
+    private PhongMaterial whiteMaterial;
 
     private Box box;
     private StackPane stackPane;
     private SubScene subScene;
-    private PhongMaterial blueMaterial;
     private double lastMouseX;
     private double lastMouseY;
     private double totalXAngle;
@@ -62,11 +65,12 @@ public class SimpleEngine {
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
         earth = new Sphere(5);
-        
+
+        // Set lights
         sunLight = new PointLight();
         ambientLight = new AmbientLight();
         
-        sunLight.setColor(Color.CORAL);
+        sunLight.setColor(Color.color(0.8, 0.8, 0.8, 0.1));
         sunLight.setTranslateX(-20);
         sunLight.setTranslateZ(-20);
         
@@ -74,14 +78,23 @@ public class SimpleEngine {
         ambientLight.setTranslateX(20);
         ambientLight.setTranslateZ(20);
 
+        // Set Material
         blueMaterial = new PhongMaterial();
-        blueMaterial.setDiffuseColor(Color.color(0, 0.2, 0.5, 0.1));
-;
+        blueMaterial.setDiffuseColor(Color.color(0, 0.2, 0.5, 0.2));
 
-        atmosphere = new Sphere(5.2);
-        atmosphere.setDrawMode(DrawMode.FILL);
-        atmosphere.setMaterial(blueMaterial);
+        whiteMaterial = new PhongMaterial();
+        whiteMaterial.setDiffuseColor(Color.color(1, 1, 1, 0.2));
 
+        // Set Atmospheres
+        blueAtmosphere = new Sphere(5.1);
+        blueAtmosphere.setDrawMode(DrawMode.FILL);
+        blueAtmosphere.setMaterial(blueMaterial);
+
+        whiteAtmosphere = new Sphere(5.05);
+        whiteAtmosphere.setDrawMode(DrawMode.FILL);
+        whiteAtmosphere.setMaterial(whiteMaterial);
+
+        // Set Earth
         PhongMaterial earthMaterial = new PhongMaterial();
         earthMaterial.setDiffuseMap(
                 new Image(
@@ -131,7 +144,8 @@ public class SimpleEngine {
 
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
-        root.getChildren().add(atmosphere);
+        root.getChildren().add(blueAtmosphere);
+        root.getChildren().add(whiteAtmosphere);
         root.getChildren().add(earth);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
