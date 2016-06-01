@@ -65,6 +65,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+
                 double mouseX = event.getScreenX();
                 double mouseY = event.getScreenY();
                 double xrel = (lastMouseX - mouseX) * moveSensitivity;
