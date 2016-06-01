@@ -29,7 +29,7 @@ public class SimpleEngine {
     private static final String SPECULAR_MAP = "earth_specularmap_flat_8192x4096.jpg";
 
     private static final double MAP_WIDTH = 8192 / 2d;
-    private static final double MAP_HEIGHT = 4092 / 2d;
+    private static final double MAP_HEIGHT = 4096 / 2d;
     private double i = 0;
 
     private double angleZ;
@@ -38,16 +38,11 @@ public class SimpleEngine {
 
 
     private TrackBallCamera camera;
-    private Sphere earth;
+    private Planet earth;
     private Skybox skybox;
     private LightBase sunLight;
     private LightBase ambientLight;
-    private Sphere blueAtmosphere;
-    private Sphere whiteAtmosphere;
-
-    private PhongMaterial blueMaterial;
-    private PhongMaterial whiteMaterial;
-
+    
     private Box box;
     private StackPane stackPane;
     private SubScene subScene;
@@ -64,7 +59,7 @@ public class SimpleEngine {
 
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
-        earth = new Sphere(5, 120);
+        earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 5);
 
         // Set lights
         sunLight = new PointLight();
@@ -78,58 +73,8 @@ public class SimpleEngine {
         ambientLight.setTranslateX(20);
         ambientLight.setTranslateZ(20);
 
-        // Set Material
-        blueMaterial = new PhongMaterial();
-        blueMaterial.setDiffuseColor(Color.color(0, 0.2, 0.5, 0.2));
-
-        whiteMaterial = new PhongMaterial();
-        whiteMaterial.setDiffuseColor(Color.color(1, 1, 1, 0.2));
-
-        // Set Atmospheres
-        blueAtmosphere = new Sphere(5.1, 200);
-        blueAtmosphere.setDrawMode(DrawMode.FILL);
-        blueAtmosphere.setMaterial(blueMaterial);
-
-        whiteAtmosphere = new Sphere(5.05, 200);
-        whiteAtmosphere.setDrawMode(DrawMode.FILL);
-        whiteAtmosphere.setMaterial(whiteMaterial);
-
-        // Set Earth
-        PhongMaterial earthMaterial = new PhongMaterial();
-        earthMaterial.setDiffuseMap(
-                new Image(
-                        DIFFUSE_MAP,
-                        MAP_WIDTH,
-                        MAP_HEIGHT,
-                        true,
-                        true
-                )
-        );
-        earthMaterial.setBumpMap(
-                new Image(
-                        NORMAL_MAP,
-                        MAP_WIDTH,
-                        MAP_HEIGHT,
-                        true,
-                        true
-                )
-        );
-        earthMaterial.setSpecularMap(
-                new Image(
-                        SPECULAR_MAP,
-                        MAP_WIDTH,
-                        MAP_HEIGHT,
-                        true,
-                        true
-                )
-        );
-
-        earth.setMaterial(
-                earthMaterial
-        );
-
-
-    }
+        earth.init();
+}
 
     public void setStackPane(StackPane stackPane) {
         this.stackPane = stackPane;
@@ -144,11 +89,9 @@ public class SimpleEngine {
 
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
-        root.getChildren().add(blueAtmosphere);
-        root.getChildren().add(whiteAtmosphere);
-        root.getChildren().add(earth);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
+        earth.addToContainer(root);
 
 
         subScene = new SubScene(root, 200, 200);
@@ -156,8 +99,6 @@ public class SimpleEngine {
         subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
         Group group = new Group(subScene);
-
-
         camera.bindOn(group);
 
         return group;
