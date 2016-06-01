@@ -69,7 +69,7 @@ public class MainApp extends Application {
             StackPane stackPane = new StackPane(se.initScene());
             se.setStackPane(stackPane);
             se.setSize();
-            se.handleRotation();
+
 
 
 

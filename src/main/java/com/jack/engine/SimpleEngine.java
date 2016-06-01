@@ -42,6 +42,7 @@ public class SimpleEngine {
 
     private TrackBallCamera camera;
     private Sphere earth;
+    private Skybox skybox;
 
     private Box box;
     private StackPane stackPane;
@@ -59,6 +60,7 @@ public class SimpleEngine {
         motionSensitivity = 0.003;
 
         camera = new TrackBallCamera(0, 0, -20);
+        skybox = setSkybox();
         earth = new Sphere(5);
 
         //blueMaterial = new PhongMaterial();
@@ -116,14 +118,17 @@ public class SimpleEngine {
         Group root = new Group();
 
         root.getChildren().add(camera);
+        root.getChildren().add(skybox);
         root.getChildren().add(earth);
+
 
         subScene = new SubScene(root, 200, 200);
         subScene.setManaged(false);
         subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
         Group group = new Group(subScene);
-        
+
+
         camera.bindOn(group);
 
         return group;
@@ -136,8 +141,19 @@ public class SimpleEngine {
         subScene.widthProperty().bind(stackPane.widthProperty());
     }
 
-    public void handleRotation() {
-        
+    private Skybox setSkybox(){
+
+        Image top = new Image("SkyBox/Cesium_mz.jpg");
+        Image front = new Image("SkyBox/Cesium_mx.jpg");
+        Image left = new Image("SkyBox/Cesium_my.jpg");
+        Image bottom = new Image("SkyBox/Cesium_pz.jpg");
+        Image back = new Image("SkyBox/Cesium_px.jpg");
+        Image right = new Image("SkyBox/Cesium_py.jpg");
+
+        return new Skybox(top, bottom, left, right, front, back, 100, camera);
+
     }
+
+
 
 }

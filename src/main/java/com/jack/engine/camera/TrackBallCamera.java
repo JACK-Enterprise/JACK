@@ -10,6 +10,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import lombok.Getter;
@@ -28,14 +29,20 @@ public class TrackBallCamera extends PerspectiveCamera {
     private double lastMouseY;
     private double totalXAngle;
     private double totalYAngle;
+    private double fov;
+    private double zoomSensitivity;
+    private double moveSensitivity;
     
     public TrackBallCamera(double x, double y, double z) {
         super(true);
         this.x = x;
         this.y = y;
         this.z = z;
+        this.fov = 35;
+        moveSensitivity = 0.3;
+        zoomSensitivity = 0.003;
         
-        setFieldOfView(35);
+        setFieldOfView(fov);
         setFarClip(10000);
         setNearClip(0.1);
         getTransforms().addAll(
@@ -49,6 +56,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         {
             element.setOnMousePressed(bindMousePressedEvent());
             element.setOnMouseDragged(bindMouseDraggedEvent());
+            element.setOnScroll(bindScrollMouseEvent());
         }
     }
     
@@ -57,8 +65,8 @@ public class TrackBallCamera extends PerspectiveCamera {
         EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double xrel = (lastMouseX - event.getX()) * 0.3;
-                double yrel = (lastMouseY - event.getY())* 0.3;
+                double xrel = (lastMouseX - event.getX()) * moveSensitivity;
+                double yrel = (lastMouseY - event.getY())* moveSensitivity;
                 
                 totalXAngle += xrel;
                 totalYAngle += yrel;
@@ -90,6 +98,27 @@ public class TrackBallCamera extends PerspectiveCamera {
             public void handle(MouseEvent event) {
                 lastMouseX = event.getX();
                 lastMouseY = event.getY();
+            }
+        };
+    }
+
+    private EventHandler <ScrollEvent> bindScrollMouseEvent(){
+        return new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+
+                fov -= fov * event.getDeltaY()*zoomSensitivity;
+
+                if(fov > 35){
+                    fov = 35;
+                }
+
+                if(fov < 0.0001){
+                    fov = 0.0001;
+                }
+
+                setFieldOfView(fov);
+
             }
         };
     }
