@@ -39,7 +39,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.y = y;
         this.z = z;
         this.fov = 35;
-        moveSensitivity = 0.3;
+        moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
         
         setFieldOfView(fov);
@@ -65,8 +65,10 @@ public class TrackBallCamera extends PerspectiveCamera {
         EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double xrel = (lastMouseX - event.getX()) * moveSensitivity;
-                double yrel = (lastMouseY - event.getY())* moveSensitivity;
+                double mouseX = event.getScreenX();
+                double mouseY = event.getScreenY();
+                double xrel = (lastMouseX - mouseX) * moveSensitivity;
+                double yrel = (lastMouseY - mouseY)* moveSensitivity;
                 
                 totalXAngle += xrel;
                 totalYAngle += yrel;
@@ -84,8 +86,8 @@ public class TrackBallCamera extends PerspectiveCamera {
                 self.getTransforms().add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
                 self.getTransforms().add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
                 self.getTransforms().add(new Translate(x, y, z));
-                lastMouseX = event.getX();
-                lastMouseY = event.getY();
+                lastMouseX = mouseX;
+                lastMouseY = mouseY;
             }
         };
         return ev;
@@ -96,8 +98,8 @@ public class TrackBallCamera extends PerspectiveCamera {
         return new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                lastMouseX = event.getX();
-                lastMouseY = event.getY();
+                lastMouseX = event.getScreenX();
+                lastMouseY = event.getScreenY();
             }
         };
     }
@@ -118,7 +120,7 @@ public class TrackBallCamera extends PerspectiveCamera {
                 }
 
                 setFieldOfView(fov);
-
+                moveSensitivity -= moveSensitivity * event.getDeltaY()*zoomSensitivity;
             }
         };
     }

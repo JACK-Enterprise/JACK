@@ -3,22 +3,17 @@ package com.jack.engine;
 
 
 import com.jack.engine.camera.TrackBallCamera;
-import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
-import javafx.scene.Camera;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
+import javafx.scene.LightBase;
+import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 
 
@@ -43,6 +38,8 @@ public class SimpleEngine {
     private TrackBallCamera camera;
     private Sphere earth;
     private Skybox skybox;
+    private LightBase sunLight;
+    private LightBase ambientLight;
 
     private Box box;
     private StackPane stackPane;
@@ -62,6 +59,16 @@ public class SimpleEngine {
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
         earth = new Sphere(5);
+        sunLight = new PointLight();
+        ambientLight = new AmbientLight();
+        
+        sunLight.setColor(Color.CORAL);
+        sunLight.setTranslateX(-20);
+        sunLight.setTranslateZ(-20);
+        
+        ambientLight.setColor(Color.color(0.4, 0.4, 0.4));
+        ambientLight.setTranslateX(20);
+        ambientLight.setTranslateZ(20);
 
         //blueMaterial = new PhongMaterial();
        // blueMaterial.setDiffuseColor(Color.BLUE);
@@ -120,7 +127,8 @@ public class SimpleEngine {
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
         root.getChildren().add(earth);
-
+        root.getChildren().add(sunLight);
+        root.getChildren().add(ambientLight);
 
         subScene = new SubScene(root, 200, 200);
         subScene.setManaged(false);
