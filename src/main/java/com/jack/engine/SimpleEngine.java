@@ -9,13 +9,16 @@ import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -43,6 +46,7 @@ public class SimpleEngine {
     private TrackBallCamera camera;
     private Sphere earth;
     private Skybox skybox;
+    private Ellipse atmosphere;
 
     private Box box;
     private StackPane stackPane;
@@ -62,13 +66,8 @@ public class SimpleEngine {
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
         earth = new Sphere(5);
-
-        //blueMaterial = new PhongMaterial();
-       // blueMaterial.setDiffuseColor(Color.BLUE);
-        //earth.setDrawMode(DrawMode.LINE);
-       // blueMaterial.setSpecularColor(Color.LIGHTBLUE);
-;
-
+        atmosphere = new Ellipse(5.1,5.1);
+        atmosphere.setFill(Color.LIGHTBLUE);
 
         PhongMaterial earthMaterial = new PhongMaterial();
         earthMaterial.setDiffuseMap(
@@ -119,7 +118,9 @@ public class SimpleEngine {
 
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
-       // root.getChildren().add(earth);
+        root.getChildren().add(atmosphere);
+        root.getChildren().add(earth);
+
 
 
         subScene = new SubScene(root, 200, 200);
