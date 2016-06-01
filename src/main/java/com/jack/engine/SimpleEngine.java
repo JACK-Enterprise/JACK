@@ -64,7 +64,7 @@ public class SimpleEngine {
 
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
-        earth = new Sphere(5);
+        earth = new Sphere(5, 120);
 
         // Set lights
         sunLight = new PointLight();
@@ -86,11 +86,11 @@ public class SimpleEngine {
         whiteMaterial.setDiffuseColor(Color.color(1, 1, 1, 0.2));
 
         // Set Atmospheres
-        blueAtmosphere = new Sphere(5.1);
+        blueAtmosphere = new Sphere(5.1, 200);
         blueAtmosphere.setDrawMode(DrawMode.FILL);
         blueAtmosphere.setMaterial(blueMaterial);
 
-        whiteAtmosphere = new Sphere(5.05);
+        whiteAtmosphere = new Sphere(5.05, 200);
         whiteAtmosphere.setDrawMode(DrawMode.FILL);
         whiteAtmosphere.setMaterial(whiteMaterial);
 
