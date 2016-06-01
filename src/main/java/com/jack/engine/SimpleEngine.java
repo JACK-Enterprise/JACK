@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Sphere;
 
 
@@ -40,6 +41,7 @@ public class SimpleEngine {
     private Skybox skybox;
     private LightBase sunLight;
     private LightBase ambientLight;
+    private Ellipse atmosphere;
 
     private Box box;
     private StackPane stackPane;
@@ -59,6 +61,7 @@ public class SimpleEngine {
         camera = new TrackBallCamera(0, 0, -20);
         skybox = setSkybox();
         earth = new Sphere(5);
+        
         sunLight = new PointLight();
         ambientLight = new AmbientLight();
         
@@ -76,6 +79,8 @@ public class SimpleEngine {
        // blueMaterial.setSpecularColor(Color.LIGHTBLUE);
 ;
 
+        atmosphere = new Ellipse(5.1,5.1);
+        atmosphere.setFill(Color.LIGHTBLUE);
 
         PhongMaterial earthMaterial = new PhongMaterial();
         earthMaterial.setDiffuseMap(
@@ -126,9 +131,11 @@ public class SimpleEngine {
 
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
+        root.getChildren().add(atmosphere);
         root.getChildren().add(earth);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
+
 
         subScene = new SubScene(root, 200, 200);
         subScene.setManaged(false);
@@ -151,12 +158,12 @@ public class SimpleEngine {
 
     private Skybox setSkybox(){
 
-        Image top = new Image("SkyBox/Cesium_mz.jpg");
-        Image front = new Image("SkyBox/Cesium_mx.jpg");
-        Image left = new Image("SkyBox/Cesium_my.jpg");
-        Image bottom = new Image("SkyBox/Cesium_pz.jpg");
-        Image back = new Image("SkyBox/Cesium_px.jpg");
-        Image right = new Image("SkyBox/Cesium_py.jpg");
+        Image top = new Image("SkyBox/Cesium_ny.jpg");
+        Image front = new Image("SkyBox/Cesium_pz.jpg");
+        Image left = new Image("SkyBox/Cesium_nx.jpg");
+        Image bottom = new Image("SkyBox/Cesium_py.jpg");
+        Image back = new Image("SkyBox/Cesium_nz.jpg");
+        Image right = new Image("SkyBox/Cesium_px.jpg");
 
         return new Skybox(top, bottom, left, right, front, back, 100, camera);
 
