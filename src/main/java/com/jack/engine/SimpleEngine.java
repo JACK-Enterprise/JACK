@@ -119,7 +119,7 @@ public class SimpleEngine {
 
         root.getChildren().add(camera);
         root.getChildren().add(skybox);
-        root.getChildren().add(earth);
+       // root.getChildren().add(earth);
 
 
         subScene = new SubScene(root, 200, 200);
@@ -143,12 +143,12 @@ public class SimpleEngine {
 
     private Skybox setSkybox(){
 
-        Image top = new Image("SkyBox/Cesium_mz.jpg");
-        Image front = new Image("SkyBox/Cesium_mx.jpg");
-        Image left = new Image("SkyBox/Cesium_my.jpg");
-        Image bottom = new Image("SkyBox/Cesium_pz.jpg");
-        Image back = new Image("SkyBox/Cesium_px.jpg");
-        Image right = new Image("SkyBox/Cesium_py.jpg");
+        Image top = new Image("SkyBox/Cesium_ny.jpg");
+        Image front = new Image("SkyBox/Cesium_pz.jpg");
+        Image left = new Image("SkyBox/Cesium_nx.jpg");
+        Image bottom = new Image("SkyBox/Cesium_py.jpg");
+        Image back = new Image("SkyBox/Cesium_nz.jpg");
+        Image right = new Image("SkyBox/Cesium_px.jpg");
 
         return new Skybox(top, bottom, left, right, front, back, 100, camera);
 
