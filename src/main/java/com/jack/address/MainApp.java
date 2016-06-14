@@ -10,6 +10,7 @@ import com.jack.address.controller.GetCapabilitiesController;
 import com.jack.address.controller.MenuBarController;
 import com.jack.address.controller.SettingsLayoutController;
 import com.jack.engine.SimpleEngine;
+import com.jack.wms.WMSImageryProvider;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -38,16 +39,17 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
 
+
+
         initRootLayout();
 
-        /*
-        WMSImageryProvider wms = new WMSImageryProvider("http://www.geosignal.org/cgi-bin/wmsmap", "layer");
+        WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
         try {
-            wms.GetCapabilities();
-        } catch (IOException e) {
+            wms.getMap();
+        }
+        catch (IOException e){
 
         }
-        */
     }
 
     /**
