@@ -86,17 +86,14 @@ public class WMSImageryProvider  {
 
     private void buildGetMapUri(){
         getMapUri = serverURL + getMapTemplate;
-
-        //getMapUri = getMapUri.replace("{styles}", defaultParameters.getStyle());
         getMapUri = getMapUri.replace("{format}", defaultParameters.getFormat());
         getMapUri = getMapUri.replace("{layers}", layers);
-
     }
 
     public void getMap() throws MalformedURLException, IOException{
 
         updateUri(0, 47, 5, 44);
-        String path = "C:\\Users\\maxim\\Desktop\\Image\\";
+        String path = "./tmp/";
 
         URL url = new URL(getMapUri);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -105,7 +102,11 @@ public class WMSImageryProvider  {
         InputStream imgStream = connection.getInputStream();
 
         File file = new File(path + "imgTest.png");
-        file.createNewFile();
+
+        //On crée le ficher dans le système de fichiers du système hôte
+        if(!file.exists()) {
+            file.createNewFile();
+        }
 
         FileOutputStream output = new FileOutputStream(file);
 
@@ -119,9 +120,6 @@ public class WMSImageryProvider  {
         //On ferme les flux
         imgStream.close();
         output.close();
-
-
-
 
     }
 

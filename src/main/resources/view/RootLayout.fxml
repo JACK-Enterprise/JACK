@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.MenuBarController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.MenuBarController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -23,6 +23,7 @@
           <Menu mnemonicParsing="false" text="%key.edit">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleGetCapabilities" text="%key.getCapabilities" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleImageViewer" text="%key.imageViewer" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="%key.plugin">
               <items>

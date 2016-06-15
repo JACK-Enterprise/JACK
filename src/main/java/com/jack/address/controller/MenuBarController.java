@@ -64,4 +64,7 @@ public class MenuBarController {
     private void handleGetCapabilities(){
         mainApp.showCapabilitiesWindow();
     }
+
+    @FXML
+    private void handleImageViewer(){mainApp.showImageViewerWindow();}
 }

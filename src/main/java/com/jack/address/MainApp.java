@@ -5,10 +5,7 @@ package com.jack.address;/**
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import com.jack.address.controller.AboutController;
-import com.jack.address.controller.GetCapabilitiesController;
-import com.jack.address.controller.MenuBarController;
-import com.jack.address.controller.SettingsLayoutController;
+import com.jack.address.controller.*;
 import com.jack.engine.SimpleEngine;
 import com.jack.wms.WMSImageryProvider;
 import javafx.application.Application;
@@ -160,6 +157,31 @@ public class MainApp extends Application {
 
             return aboutController.isClicked();
         }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showImageViewerWindow(){
+        try{
+            // Load XML File
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("/view/ImageViewer.fxml"));
+            AnchorPane pane = loader.load();
+
+            // Creating the Stage
+            Stage imageStage = new Stage();
+            imageStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(pane);
+            imageStage.setScene(scene);
+
+            ImageViewerController imageViewerController = loader.getController();
+            imageViewerController.setImageStage(imageStage);
+            imageStage.showAndWait();
+
+            return imageViewerController.isClicked();
+        } catch (IOException e){
             e.printStackTrace();
             return false;
         }
