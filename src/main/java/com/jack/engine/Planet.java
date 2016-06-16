@@ -11,9 +11,9 @@ import javafx.scene.paint.PhongMaterial;
 import java.nio.file.Path;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
+import lombok.Getter;
 
 /**
  *
@@ -34,6 +34,10 @@ public class Planet extends Sphere {
         this.specularMap = Paths.get(specularMap);
         this.bumpMap = Paths.get(bumpMap);
         this.radius = radius;
+    }
+    
+    public double getPlanetRadius() {
+        return radius;
     }
     
     public void init() {
