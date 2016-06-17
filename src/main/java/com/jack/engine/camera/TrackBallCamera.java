@@ -29,7 +29,8 @@ public class TrackBallCamera extends PerspectiveCamera {
     private double lastMouseY;
     private double totalXAngle;
     private double totalYAngle;
-    private double fov;
+    @Getter @Setter private double fov;
+    @Getter private double startFov;
     private double zoomSensitivity;
     private double moveSensitivity;
     
@@ -39,6 +40,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.y = y;
         this.z = z;
         this.fov = 35;
+        startFov = this.fov;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
         

@@ -4,13 +4,20 @@ package com.jack.engine;
 
 import com.jack.engine.camera.TrackBallCamera;
 import com.jack.engine.geometry.SphereCoordinates;
+import com.jack.engine.render.Marker;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import static javafx.scene.SceneAntialiasing.BALANCED;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -59,7 +66,9 @@ public class SimpleEngine {
     private Pos3D pos;
     private Pos3D pos2;
     private double dist;
-    private Sphere sphere = new Sphere(0.01);
+    private Marker marker = new Marker(gpsCoord);
+    private Marker marker2 = new Marker(gpsCoord2);
+    private List<Marker> markers = new ArrayList<Marker>();
 
     public SimpleEngine() {
 
@@ -91,11 +100,7 @@ public class SimpleEngine {
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
         System.out.println("Pos is : {" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "}");
         System.out.println("Pos is : {" + pos2.getX() + ", " + pos2.getY() + ", " + pos2.getZ() + "}");
-        System.out.println("Distance is : {" + dist + "}");
-    
-        sphere.setTranslateX(pos.getX());
-        sphere.setTranslateY(pos.getY());
-        sphere.setTranslateZ(-pos.getZ());  
+        System.out.println("Distance is : {" + dist + "}");  
     }
 
     public void setStackPane(StackPane stackPane) {
@@ -108,11 +113,17 @@ public class SimpleEngine {
 
     public Group initScene(){
         Group root = new Group();
+        Group markerGroup = new Group();
         root.getChildren().add(skybox);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
         earth.addToContainer(root);
-        root.getChildren().add(sphere);
+        marker.render(markerGroup, earth.getPlanetRadius());
+        marker2.render(markerGroup, earth.getPlanetRadius());
+        root.getChildren().add(markerGroup);
+        
+        markers.add(marker);
+        markers.add(marker2);
 
         subScene = new SubScene(root, 200, 200, true, BALANCED);
         subScene.setManaged(true);
@@ -120,9 +131,25 @@ public class SimpleEngine {
         subScene.setCamera(camera);
         Group group = new Group(subScene);
         camera.bindOn(group);
+        
+        subScene.setOnScroll(bindScrollMouseEvent());
 
         return group;
 
+    }
+    
+    private EventHandler <ScrollEvent> bindScrollMouseEvent(){
+        return new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+
+                for(Marker markerNode : markers)
+                {
+                    markerNode.scale(camera.getFov() / camera.getStartFov());
+                }
+            }
+        };
+        
     }
 
     public void setSize(){
