@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#handleClick" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.AboutController">
+   <children>
+      <ImageView fitHeight="137.0" fitWidth="200.0" layoutX="400.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="26.0" layoutY="161.0" prefHeight="36.0" prefWidth="310.0" text="Jack Version 1.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="236.0" text="Powered by " />
+      <Hyperlink layoutX="92.0" layoutY="233.0" onAction="#handleLink" prefHeight="23.0" prefWidth="101.0" text="Jack Enterprise" textFill="#579df3" underline="true" />
+      <Label layoutX="181.0" layoutY="378.0" text="©2016 JackEnterprise. All rights reserved" />
+   </children>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+</AnchorPane>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="655.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.SettingsLayoutController">
+   <children>
+      <SplitPane dividerPositions="0.8919597989949749" layoutY="-14.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="655.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <SplitPane dividerPositions="0.34150076569678406" prefHeight="160.0" prefWidth="200.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <TreeView prefHeight="342.0" prefWidth="220.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+              </items>
+            </SplitPane>
+          <AnchorPane maxHeight="42.0" minHeight="40.0" minWidth="0.0" prefHeight="42.0" prefWidth="653.0">
+               <children>
+                  <HBox alignment="TOP_RIGHT" layoutX="293.0" maxHeight="42.0" minHeight="40.0" prefHeight="40.0" prefWidth="653.0" spacing="12.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOk" prefHeight="25.0" prefWidth="65.0" text="%key.ok" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="65.0" text="%key.cancel" />
+                        <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="%key.apply" />
+                        <Button mnemonicParsing="false" prefWidth="65.0" text="%key.help" />
+                     </children>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
