@@ -3,11 +3,7 @@ package com.jack.engine;
 
 
 import com.jack.engine.camera.TrackBallCamera;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
-import javafx.scene.LightBase;
-import javafx.scene.PointLight;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -51,13 +47,17 @@ public class SimpleEngine {
     private double totalXAngle;
     private double totalYAngle;
 
-    public SimpleEngine() {
+    private Scene scene;
 
+    public SimpleEngine(Scene scene) {
+
+        this.scene = scene;
         angleZ = 0;
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new TrackBallCamera(0, 0, -20);
+        camera = new TrackBallCamera(0, 0, -20, scene);
+
         skybox = setSkybox();
         earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 5);
 
@@ -78,6 +78,10 @@ public class SimpleEngine {
 
     public void setStackPane(StackPane stackPane) {
         this.stackPane = stackPane;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public SubScene getSubScene() {

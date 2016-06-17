@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Rotate;
@@ -25,6 +26,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter @Setter private double x;
     @Getter @Setter private double y;
     @Getter @Setter private double z;
+    private Scene scene;
     private double lastMouseX;
     private double lastMouseY;
     private double totalXAngle;
@@ -33,12 +35,13 @@ public class TrackBallCamera extends PerspectiveCamera {
     private double zoomSensitivity;
     private double moveSensitivity;
     
-    public TrackBallCamera(double x, double y, double z) {
+    public TrackBallCamera(double x, double y, double z, Scene scene) {
         super(true);
         this.x = x;
         this.y = y;
         this.z = z;
         this.fov = 35;
+        this.scene = scene;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
         
@@ -49,14 +52,21 @@ public class TrackBallCamera extends PerspectiveCamera {
                 new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.X_AXIS),
                 new Translate(x, y, z));
+
+
     }
-    
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
     public void bindOn(Node element) {
         if(element != null)
         {
             element.setOnMousePressed(bindMousePressedEvent());
             element.setOnMouseDragged(bindMouseDraggedEvent());
             element.setOnScroll(bindScrollMouseEvent());
+            element.setOnMouseReleased(bindMouseReleasedEvent());
         }
     }
     
@@ -65,7 +75,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-
+                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 double mouseX = event.getScreenX();
                 double mouseY = event.getScreenY();
                 double xrel = (lastMouseX - mouseX) * moveSensitivity;
@@ -99,6 +109,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         return new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
             }
@@ -131,6 +142,14 @@ public class TrackBallCamera extends PerspectiveCamera {
                 {
                     moveSensitivity = 0.0001;
                 }
+            }
+        };
+    }
+    private EventHandler <MouseEvent> bindMouseReleasedEvent(){
+        return new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                scene.setCursor(javafx.scene.Cursor.DEFAULT);
             }
         };
     }

@@ -62,21 +62,15 @@ public class MainApp extends Application {
             loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-            SimpleEngine se = new SimpleEngine();
-
-
-            StackPane stackPane = new StackPane(se.initScene());
-            se.setStackPane(stackPane);
-            se.setSize();
-
-
-
-
-            rootLayout.setCenter(stackPane);
 
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
+            SimpleEngine se = new SimpleEngine(scene);
+            StackPane stackPane = new StackPane(se.initScene());
+            se.setStackPane(stackPane);
+            se.setSize();
+            rootLayout.setCenter(stackPane);
 
             primaryStage.setScene(scene);
             primaryStage.show();
