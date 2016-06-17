@@ -93,6 +93,7 @@ public class WMSImageryProvider  {
     public void getMap() throws MalformedURLException, IOException{
 
         updateUri(0, 47, 5, 44);
+        //updateUri(2.33, 48.86, 3.33, 49.86);
         String path = "./tmp/";
 
         URL url = new URL(getMapUri);
@@ -124,6 +125,17 @@ public class WMSImageryProvider  {
     }
 
     private void updateUri(int minX, int minY, int maxX, int maxY){
+        buildGetMapUri();
+        getMapUri = getMapUri.replace("{minX}", ""+minX);
+        getMapUri = getMapUri.replace("{minY}", ""+minY);
+        getMapUri = getMapUri.replace("{maxX}", ""+maxX);
+        getMapUri = getMapUri.replace("{maxY}", ""+maxY);
+
+        System.out.println(getMapUri);
+
+    }
+    
+    private void updateUri(double minX, double minY, double maxX, double maxY){
         buildGetMapUri();
         getMapUri = getMapUri.replace("{minX}", ""+minX);
         getMapUri = getMapUri.replace("{minY}", ""+minY);
