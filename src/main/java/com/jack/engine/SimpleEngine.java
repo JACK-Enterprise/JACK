@@ -7,26 +7,19 @@ import com.jack.engine.geometry.SphereCoordinates;
 import com.jack.engine.render.Marker;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import static javafx.scene.SceneAntialiasing.BALANCED;
 import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Sphere;
-
-
 
 /**
  * Created by Maxime on 18/05/2016.
@@ -70,14 +63,17 @@ public class SimpleEngine {
     private Marker marker2 = new Marker(gpsCoord2);
     private List<Marker> markers = new ArrayList<Marker>();
 
-    public SimpleEngine() {
+    private Scene scene;
 
-        
+    public SimpleEngine(Scene scene) {
+
+        this.scene = scene;
         angleZ = 0;
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new TrackBallCamera(0, 0, -30);
+        camera = new TrackBallCamera(0, 0, -30, scene);
+        
         skybox = setSkybox();
         earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 6.371);
 
@@ -105,6 +101,10 @@ public class SimpleEngine {
 
     public void setStackPane(StackPane stackPane) {
         this.stackPane = stackPane;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public SubScene getSubScene() {

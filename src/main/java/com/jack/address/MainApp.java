@@ -5,11 +5,9 @@ package com.jack.address;/**
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import com.jack.address.controller.AboutController;
-import com.jack.address.controller.GetCapabilitiesController;
-import com.jack.address.controller.MenuBarController;
-import com.jack.address.controller.SettingsLayoutController;
+import com.jack.address.controller.*;
 import com.jack.engine.SimpleEngine;
+import com.jack.wms.WMSImageryProvider;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -38,16 +36,17 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
 
+
+
         initRootLayout();
 
-        /*
-        WMSImageryProvider wms = new WMSImageryProvider("http://www.geosignal.org/cgi-bin/wmsmap", "layer");
+        WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
         try {
-            wms.GetCapabilities();
-        } catch (IOException e) {
+            wms.getMap();
+        }
+        catch (IOException e){
 
         }
-        */
     }
 
     /**
@@ -63,21 +62,15 @@ public class MainApp extends Application {
             loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-            SimpleEngine se = new SimpleEngine();
-
-
-            StackPane stackPane = new StackPane(se.initScene());
-            se.setStackPane(stackPane);
-            se.setSize();
-
-
-
-
-            rootLayout.setCenter(stackPane);
 
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
+            SimpleEngine se = new SimpleEngine(scene);
+            StackPane stackPane = new StackPane(se.initScene());
+            se.setStackPane(stackPane);
+            se.setSize();
+            rootLayout.setCenter(stackPane);
 
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -158,6 +151,31 @@ public class MainApp extends Application {
 
             return aboutController.isClicked();
         }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showImageViewerWindow(){
+        try{
+            // Load XML File
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("/view/ImageViewer.fxml"));
+            AnchorPane pane = loader.load();
+
+            // Creating the Stage
+            Stage imageStage = new Stage();
+            imageStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(pane);
+            imageStage.setScene(scene);
+
+            ImageViewerController imageViewerController = loader.getController();
+            imageViewerController.setImageStage(imageStage);
+            imageStage.showAndWait();
+
+            return imageViewerController.isClicked();
+        } catch (IOException e){
             e.printStackTrace();
             return false;
         }
