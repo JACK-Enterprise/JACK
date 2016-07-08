@@ -26,4 +26,16 @@ public class Pos3D {
     public double getManhattanDistance(Pos3D dest) {
         return abs(x - dest.getX()) + abs(y - dest.getY()) + abs(z - dest.getZ());
     }
+    
+    public GPSCoord toGPSCoord() {
+        GPSCoord gpsPos = new GPSCoord();
+        double r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+        double theta = Math.atan(x / z);
+        double phi = Math.asin(-y / r);
+        
+        gpsPos.setLongitude(Math.toDegrees(theta));
+        gpsPos.setLatitude(Math.toDegrees(phi) * 1.5);
+        
+        return gpsPos;
+    }
 }

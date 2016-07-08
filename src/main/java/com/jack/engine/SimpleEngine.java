@@ -3,7 +3,6 @@ package com.jack.engine;
 
 
 import com.jack.engine.camera.TrackBallCamera;
-import com.jack.engine.geometry.SphereCoordinates;
 import com.jack.engine.render.Marker;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,6 @@ public class SimpleEngine {
     private LightBase ambientLight;
     private GPSCoord gpsCoord = new GPSCoord(2.333333, 48.866667);
     private GPSCoord gpsCoord2 = new GPSCoord(-74.00, 40.43);
-    private SphereCoordinates coords = new SphereCoordinates(gpsCoord);
-    private SphereCoordinates coords2 = new SphereCoordinates(gpsCoord2);
     
     private Box box;
     private StackPane stackPane;
@@ -91,11 +88,15 @@ public class SimpleEngine {
 
         earth.init();
         
-        pos = coords.get3DPosUsingDegrees(earth.getPlanetRadius());
-        pos2 = coords2.get3DPosUsingDegrees(earth.getPlanetRadius());
+        pos = gpsCoord.toPos3D(earth.getPlanetRadius());
+        pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
         System.out.println("Pos is : {" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "}");
         System.out.println("Pos is : {" + pos2.getX() + ", " + pos2.getY() + ", " + pos2.getZ() + "}");
+        
+        System.out.println("Pos is : {" + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        System.out.println("Pos is : {" + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        
         System.out.println("Distance is : {" + dist + "}");  
     }
 
