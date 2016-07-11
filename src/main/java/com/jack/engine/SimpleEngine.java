@@ -3,7 +3,6 @@ package com.jack.engine;
 
 
 import com.jack.engine.camera.TrackBallCamera;
-import com.jack.engine.geometry.SphereCoordinates;
 import com.jack.engine.render.Marker;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,6 @@ public class SimpleEngine {
     private LightBase ambientLight;
     private GPSCoord gpsCoord = new GPSCoord(2.333333, 48.866667);
     private GPSCoord gpsCoord2 = new GPSCoord(-74.00, 40.43);
-    private SphereCoordinates coords = new SphereCoordinates(gpsCoord);
-    private SphereCoordinates coords2 = new SphereCoordinates(gpsCoord2);
     
     private Box box;
     private StackPane stackPane;
@@ -62,7 +59,7 @@ public class SimpleEngine {
     private Marker marker = new Marker(gpsCoord);
     private Marker marker2 = new Marker(gpsCoord2);
     private List<Marker> markers = new ArrayList<Marker>();
-
+    private CartographyTextureManager manager;
     private Scene scene;
 
     public SimpleEngine(Scene scene) {
@@ -76,7 +73,7 @@ public class SimpleEngine {
         
         skybox = setSkybox();
         earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 6.371);
-
+        manager = new CartographyTextureManager(earth);
         // Set lights
         sunLight = new PointLight();
         ambientLight = new AmbientLight();
@@ -91,11 +88,13 @@ public class SimpleEngine {
 
         earth.init();
         
-        pos = coords.get3DPosUsingDegrees(earth.getPlanetRadius());
-        pos2 = coords2.get3DPosUsingDegrees(earth.getPlanetRadius());
+        pos = gpsCoord.toPos3D(earth.getPlanetRadius());
+        pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
-        System.out.println("Pos is : {" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "}");
-        System.out.println("Pos is : {" + pos2.getX() + ", " + pos2.getY() + ", " + pos2.getZ() + "}");
+        
+        System.out.println("Pos is : {" + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        System.out.println("Pos is : {" + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        
         System.out.println("Distance is : {" + dist + "}");  
     }
 
@@ -122,6 +121,9 @@ public class SimpleEngine {
         marker2.render(markerGroup, earth.getPlanetRadius());
         root.getChildren().add(markerGroup);
         
+        Group textures = manager.bindTextures(scene, 0, 0, 0, 0);
+        root.getChildren().add(textures);
+        
         markers.add(marker);
         markers.add(marker2);
 
@@ -129,6 +131,7 @@ public class SimpleEngine {
         subScene.setManaged(true);
         subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
+        
         Group group = new Group(subScene);
         camera.bindOn(group);
         
