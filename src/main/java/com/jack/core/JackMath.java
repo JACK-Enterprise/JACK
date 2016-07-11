@@ -107,6 +107,15 @@ public class JackMath {
         return EPSILON20;
     }
 
+    public static double xPosbyFov (double z, double fov, double radius) {
+
+        double zAbs = Math.abs(z);
+        double xPos = Math.tan(Math.toRadians(fov) /2) * Math.abs(zAbs - radius) * 2;
+        System.out.println("xPos : " + xPos + " z from abs : " + zAbs + " Pos z : " + z + " Fov : " + fov );
+
+        return xPos;
+    }
+
 
 
 

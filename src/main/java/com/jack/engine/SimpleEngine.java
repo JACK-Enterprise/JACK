@@ -70,6 +70,7 @@ public class SimpleEngine {
         motionSensitivity = 0.003;
 
         camera = new TrackBallCamera(0, 0, -30, scene);
+
         
         skybox = setSkybox();
         earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 6.371);
@@ -87,7 +88,8 @@ public class SimpleEngine {
         ambientLight.setTranslateZ(30);
 
         earth.init();
-        
+        camera.setPlanet(earth);
+
         pos = gpsCoord.toPos3D(earth.getPlanetRadius());
         pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;

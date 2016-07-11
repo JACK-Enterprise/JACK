@@ -5,6 +5,8 @@
  */
 package com.jack.engine.camera;
 
+import com.jack.engine.Planet;
+import static  com.jack.core.JackMath.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
@@ -35,6 +37,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter private double startFov;
     private double zoomSensitivity;
     private double moveSensitivity;
+    private Planet planet;
     
     public TrackBallCamera(double x, double y, double z, Scene scene) {
         super(true);
@@ -56,6 +59,10 @@ public class TrackBallCamera extends PerspectiveCamera {
                 new Translate(x, y, z));
 
 
+    }
+
+    public void setPlanet(Planet planet) {
+        this.planet = planet;
     }
 
     public void setScene(Scene scene) {
@@ -114,6 +121,8 @@ public class TrackBallCamera extends PerspectiveCamera {
                 scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
+
+                xPosbyFov(z, fov, planet.getPlanetRadius());
             }
         };
     }
@@ -144,6 +153,8 @@ public class TrackBallCamera extends PerspectiveCamera {
                 {
                     moveSensitivity = 0.0001;
                 }
+
+                xPosbyFov(z, fov, planet.getPlanetRadius());
             }
         };
     }
@@ -153,6 +164,7 @@ public class TrackBallCamera extends PerspectiveCamera {
             public void handle(MouseEvent event) {
                 scene.setCursor(javafx.scene.Cursor.DEFAULT);
             }
+
         };
     }
 }
