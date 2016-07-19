@@ -5,8 +5,11 @@
  */
 package com.jack.engine.camera;
 
+import com.jack.engine.EmpriseCoord;
 import com.jack.engine.Planet;
 import static  com.jack.core.JackMath.*;
+
+import com.jack.wms.WMSImageryProvider;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
@@ -18,6 +21,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.IOException;
 
 /**
  *
@@ -31,8 +36,8 @@ public class TrackBallCamera extends PerspectiveCamera {
     private Scene scene;
     private double lastMouseX;
     private double lastMouseY;
-    private double totalXAngle;
-    private double totalYAngle;
+    @Getter private double totalXAngle;
+    @Getter private double totalYAngle;
     @Getter @Setter private double fov;
     @Getter private double startFov;
     private double zoomSensitivity;
@@ -122,7 +127,7 @@ public class TrackBallCamera extends PerspectiveCamera {
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
 
-                xPosbyFov(z, fov, planet.getPlanetRadius());
+
             }
         };
     }
@@ -154,7 +159,15 @@ public class TrackBallCamera extends PerspectiveCamera {
                     moveSensitivity = 0.0001;
                 }
 
-                xPosbyFov(z, fov, planet.getPlanetRadius());
+
+                EmpriseCoord emprise = xPosbyFov(x, z, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
+                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+                try {
+                    wms.getMap(emprise);
+                }
+                catch (IOException e){
+
+                }
             }
         };
     }
@@ -163,8 +176,17 @@ public class TrackBallCamera extends PerspectiveCamera {
             @Override
             public void handle(MouseEvent event) {
                 scene.setCursor(javafx.scene.Cursor.DEFAULT);
-            }
 
+                EmpriseCoord emprise = xPosbyFov(x, z, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
+                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+                try {
+                    wms.getMap(emprise);
+                }
+                catch (IOException e){
+
+                }
+
+            }
         };
     }
 }

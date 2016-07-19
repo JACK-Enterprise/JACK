@@ -44,6 +44,7 @@ public class SimpleEngine {
     private LightBase ambientLight;
     private GPSCoord gpsCoord = new GPSCoord(2.333333, 48.866667);
     private GPSCoord gpsCoord2 = new GPSCoord(-74.00, 40.43);
+    private GPSCoord getGpsCoord3 = new GPSCoord(3.5, 48.866667);
     
     private Box box;
     private StackPane stackPane;
@@ -55,9 +56,11 @@ public class SimpleEngine {
     
     private Pos3D pos;
     private Pos3D pos2;
+    private Pos3D pos3;
     private double dist;
     private Marker marker = new Marker(gpsCoord);
     private Marker marker2 = new Marker(gpsCoord2);
+    private Marker marker3 = new Marker(getGpsCoord3);
     private List<Marker> markers = new ArrayList<Marker>();
     private CartographyTextureManager manager;
     private Scene scene;
@@ -92,6 +95,7 @@ public class SimpleEngine {
 
         pos = gpsCoord.toPos3D(earth.getPlanetRadius());
         pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
+        pos3 = getGpsCoord3.toPos3D(earth.getPlanetRadius());
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
         
         System.out.println("Pos is : {" + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
@@ -121,6 +125,8 @@ public class SimpleEngine {
         earth.addToContainer(root);
         marker.render(markerGroup, earth.getPlanetRadius());
         marker2.render(markerGroup, earth.getPlanetRadius());
+        marker3.render(markerGroup, earth.getPlanetRadius());
+
         root.getChildren().add(markerGroup);
         
         Group textures = manager.bindTextures(scene, 0, 0, 0, 0);
@@ -128,6 +134,7 @@ public class SimpleEngine {
         
         markers.add(marker);
         markers.add(marker2);
+        markers.add(marker3);
 
         subScene = new SubScene(root, 200, 200, true, BALANCED);
         subScene.setManaged(true);

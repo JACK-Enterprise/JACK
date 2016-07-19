@@ -39,7 +39,7 @@ public class MainApp extends Application {
 
 
         initRootLayout();
-
+/*
         WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
         try {
             wms.getMap();
@@ -47,6 +47,7 @@ public class MainApp extends Application {
         catch (IOException e){
 
         }
+        */
     }
 
     /**

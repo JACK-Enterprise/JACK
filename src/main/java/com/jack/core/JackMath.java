@@ -1,5 +1,10 @@
 package com.jack.core;
 
+import com.jack.engine.EmpriseCoord;
+import com.jack.engine.GPSCoord;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+
 /**
  * Created by Maxime on 14/04/2016.
  */
@@ -107,15 +112,43 @@ public class JackMath {
         return EPSILON20;
     }
 
-    public static double xPosbyFov (double z, double fov, double radius) {
+    /**
+     *
+     * @param x
+     * @param z
+     * @param fov
+     * @param radius
+     * @param xAngle
+     * @param yAngle
+     * @return EmpriseCoord
+     */
+    public static EmpriseCoord xPosbyFov (double x, double z, double fov, double radius, double xAngle, double yAngle) {
 
         double zAbs = Math.abs(z);
-        double xPos = Math.tan(Math.toRadians(fov) /2) * Math.abs(zAbs - radius) * 2;
-        System.out.println("xPos : " + xPos + " z from abs : " + zAbs + " Pos z : " + z + " Fov : " + fov );
+        double xPos = Math.tan(Math.toRadians(fov)/ 2) * (Math.abs(zAbs - radius));
+        GPSCoord camCoord = new GPSCoord();
+        camCoord.setLongitude(-xAngle);
+        camCoord.setLatitude(-yAngle * 1.5);
 
-        return xPos;
+
+        double minX = (camCoord.getLongitude() - xPos * 10);
+        double maxX = camCoord.getLongitude() + xPos * 10;
+
+        double minY = camCoord.getLatitude() - xPos;
+        double maxY = camCoord.getLatitude() + xPos * 10;
+
+        double camPos = camCoord.getLongitude();
+
+        /*
+        System.out.println("Z " + z + " X : " + x);
+        System.out.println("Radius : " + radius);
+        System.out.println("X Cam : " + camPos + " || xMaxPos : " + maxX);
+        System.out.println("Emprise : " + minX + " " + minY + " " + maxX + " " + minY);
+        */
+
+        EmpriseCoord emprise = new EmpriseCoord(minX, minY, maxX, maxY);
+        return emprise;
     }
-
 
 
 

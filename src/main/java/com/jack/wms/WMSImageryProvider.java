@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import com.jack.core.ImageryProvider;
+import com.jack.engine.EmpriseCoord;
+import com.jack.engine.GPSCoord;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
@@ -90,11 +92,11 @@ public class WMSImageryProvider  {
         getMapUri = getMapUri.replace("{layers}", layers);
     }
 
-    public void getMap() throws MalformedURLException, IOException{
+    public void getMap(EmpriseCoord emprise) throws MalformedURLException, IOException{
 
-        updateUri(0, 47, 5, 44);
-        //updateUri(2.33, 48.86, 3.33, 49.86);
-        String path = "./tmp/";
+        updateUri(emprise);
+        String folderPath = "./tmp";
+        File file = new File(folderPath + "/wms.png");
 
         URL url = new URL(getMapUri);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -102,13 +104,17 @@ public class WMSImageryProvider  {
         connection.setRequestMethod("GET");
         InputStream imgStream = connection.getInputStream();
 
-        File file = new File(path + "imgTest.png");
+
+
 
         //On crée le ficher dans le système de fichiers du système hôte
-        if(!file.exists()) {
-            file.createNewFile();
-        }
+        if(!new File(folderPath).exists()) {
+            new File(folderPath).mkdirs();
 
+            if(!file.exists())
+                file.createNewFile();
+        }
+        
         FileOutputStream output = new FileOutputStream(file);
 
         int bytesRead = -1;
@@ -143,7 +149,19 @@ public class WMSImageryProvider  {
         getMapUri = getMapUri.replace("{maxY}", ""+maxY);
 
         System.out.println(getMapUri);
+    }
 
+    private void updateUri(EmpriseCoord emprise){
+        GPSCoord minCoord = emprise.getMinCoord();
+        GPSCoord maxCoord = emprise.getMaxCoord();
+
+        buildGetMapUri();
+        getMapUri = getMapUri.replace("{minX}", ""+minCoord.getLongitude());
+        getMapUri = getMapUri.replace("{minY}", ""+minCoord.getLatitude());
+        getMapUri = getMapUri.replace("{maxX}", ""+maxCoord.getLongitude());
+        getMapUri = getMapUri.replace("{maxY}", ""+maxCoord.getLatitude());
+
+        System.out.println(getMapUri);
     }
 
 
