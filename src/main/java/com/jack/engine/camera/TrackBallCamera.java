@@ -5,23 +5,24 @@
  */
 package com.jack.engine.camera;
 
+import com.jack.engine.CartographyTextureManager;
 import com.jack.engine.EmpriseCoord;
+import com.jack.engine.GPSCoord;
 import com.jack.engine.Planet;
 import static  com.jack.core.JackMath.*;
-
 import com.jack.wms.WMSImageryProvider;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
-import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.IOException;
 
 /**
@@ -43,8 +44,13 @@ public class TrackBallCamera extends PerspectiveCamera {
     private double zoomSensitivity;
     private double moveSensitivity;
     private Planet planet;
-    
-    public TrackBallCamera(double x, double y, double z, Scene scene) {
+    private Group root;
+    private Group tile;
+    private StackPane stackPane;
+    private Stage stage;
+    @Setter private TrackBallCamera camera;
+
+    public TrackBallCamera(double x, double y, double z, Scene scene, Group root) {
         super(true);
         this.x = x;
         this.y = y;
@@ -52,9 +58,34 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.fov = 35;
         startFov = this.fov;
         this.scene = scene;
+        this.root = root;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
         
+        setFieldOfView(fov);
+        setFarClip(10000);
+        setNearClip(0.1);
+        getTransforms().addAll(
+                new Rotate(0, Rotate.Y_AXIS),
+                new Rotate(0, Rotate.X_AXIS),
+                new Translate(x, y, z));
+
+
+    }
+
+    public TrackBallCamera(double x, double y, double z, Scene scene, Group root, Group tile) {
+        super(true);
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.fov = 35;
+        startFov = this.fov;
+        this.scene = scene;
+        this.root = root;
+        this.tile = tile;
+        moveSensitivity = 0.4;
+        zoomSensitivity = 0.003;
+
         setFieldOfView(fov);
         setFarClip(10000);
         setNearClip(0.1);
@@ -72,6 +103,22 @@ public class TrackBallCamera extends PerspectiveCamera {
 
     public void setScene(Scene scene) {
         this.scene = scene;
+    }
+
+    public void setRoot(Group root) {
+        this.root = root;
+    }
+
+    public void setTile(Group tile) {
+        this.tile = tile;
+    }
+
+    public void setStackPane(StackPane stackPane) {
+        this.stackPane = stackPane;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void bindOn(Node element) {
@@ -168,6 +215,25 @@ public class TrackBallCamera extends PerspectiveCamera {
                 catch (IOException e){
 
                 }
+                GPSCoord camCoord = new GPSCoord();
+                camCoord.setLongitude(-totalXAngle);
+                camCoord.setLatitude(-totalYAngle * 1.5);
+
+                System.out.println();
+                System.out.println("CAM COORD : " + camCoord.getLongitude() + "  " + camCoord.getLatitude());
+
+                CartographyTextureManager manager = new CartographyTextureManager(planet);
+
+                Box box = manager.bindTexturesFromGPSCoord(scene, -totalXAngle, -totalYAngle * 1.5);
+                tile.getChildren().add(box);
+
+
+                System.out.println("######################################################");
+                System.out.println(root.getChildren().toString());
+                System.out.println("######################################################");
+
+                stage.show();
+
             }
         };
     }

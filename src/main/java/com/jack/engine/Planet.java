@@ -39,7 +39,16 @@ public class Planet extends Sphere {
     public double getPlanetRadius() {
         return radius;
     }
-    
+
+
+    public void setPlanetRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public void setDiffuseMap(Path diffuseMap) {
+        this.diffuseMap = diffuseMap;
+    }
+
     public void init() {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(

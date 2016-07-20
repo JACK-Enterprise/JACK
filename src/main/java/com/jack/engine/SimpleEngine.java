@@ -18,7 +18,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.stage.Stage;
 
 /**
  * Created by Maxime on 18/05/2016.
@@ -64,6 +66,9 @@ public class SimpleEngine {
     private List<Marker> markers = new ArrayList<Marker>();
     private CartographyTextureManager manager;
     private Scene scene;
+    private Group root;
+    private Group tile;
+    private Stage stage;
 
     public SimpleEngine(Scene scene) {
 
@@ -72,7 +77,7 @@ public class SimpleEngine {
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new TrackBallCamera(0, 0, -30, scene);
+        camera = new TrackBallCamera(0, 0, -30, scene, root, tile);
 
         
         skybox = setSkybox();
@@ -112,16 +117,24 @@ public class SimpleEngine {
         this.scene = scene;
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public SubScene getSubScene() {
         return subScene;
     }
 
     public Group initScene(){
-        Group root = new Group();
+        root = new Group();
+        tile = new Group();
         Group markerGroup = new Group();
+
+        root.getChildren().add(tile);
         root.getChildren().add(skybox);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
+
         earth.addToContainer(root);
         marker.render(markerGroup, earth.getPlanetRadius());
         marker2.render(markerGroup, earth.getPlanetRadius());
@@ -130,7 +143,19 @@ public class SimpleEngine {
         root.getChildren().add(markerGroup);
         
         Group textures = manager.bindTextures(scene, 0, 0, 0, 0);
+        Pos3D pos = new Pos3D(0.2, -3.47, 5.335);
+
+        Box box = createPlane("file:./cartography/wms2.png", pos, 0.5, 0.5);
+
+        Box box2 = manager.bindTexturesPositiv(scene);
+
+        tile.getChildren().add(box);
+        tile.getChildren().add(box2);
+
         root.getChildren().add(textures);
+
+
+        camera.setRoot(root);
         
         markers.add(marker);
         markers.add(marker2);
@@ -183,6 +208,44 @@ public class SimpleEngine {
 
     }
 
+    public void initCameraConfig(){
+        camera.setStackPane(stackPane);
+        camera.setCamera(camera);
+        camera.setStage(stage);
+        camera.setTile(tile);
+
+    }
+
+
+    private Box createPlane(String texturePath, Pos3D pos, double w, double h){
+        Box box = new Box(0.1, h, w);
+        PhongMaterial material = new PhongMaterial();
+
+        System.out.println("-------------- CUBE POS ---------------");
+        System.out.println("Cube Coord in 3D Pos :");
+        System.out.println("    -X : " + pos.getX());
+        System.out.println("    -Y : " + pos.getY());
+        System.out.println("    -Z : " + pos.getZ());
+        System.out.println();
+
+        box.setTranslateX(pos.getX());
+        box.setTranslateY(pos.getY());
+        box.setTranslateZ(-pos.getZ());
+
+        material.setDiffuseMap(
+                new Image(
+                        texturePath,
+                        256,
+                        256,
+                        true,
+                        true
+                )
+        );
+
+        box.setMaterial(material);
+
+        return box;
+    }
 
 
 }

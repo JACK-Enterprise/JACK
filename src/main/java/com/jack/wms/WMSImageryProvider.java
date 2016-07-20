@@ -114,7 +114,7 @@ public class WMSImageryProvider  {
             if(!file.exists())
                 file.createNewFile();
         }
-        
+
         FileOutputStream output = new FileOutputStream(file);
 
         int bytesRead = -1;

@@ -74,6 +74,8 @@ public class MainApp extends Application {
             rootLayout.setCenter(stackPane);
 
             primaryStage.setScene(scene);
+            se.setStage(primaryStage);
+            se.initCameraConfig();
             primaryStage.show();
             //earthViewer.rotateAroundYAxis(stackPane).play();
 
