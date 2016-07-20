@@ -102,8 +102,8 @@ public class CartographyTextureManager {
 
         double w = 0.1;
         double h = 0.1;
-        double xAngle = Math.toDegrees(Math.acos(-pos.getX()) / (radius - pos.getZ())); // NOT CHECKED
-        double yAngle = Math.toDegrees(Math.acos(pos.getY() / (radius - pos.getZ()))); // SEEMS OK
+        double xAngle = Math.toDegrees(Math.acos(-pos.getX() / radius)); // NOT CHECKED
+        double yAngle = Math.toDegrees(Math.acos(pos.getY() / radius)); // SEEMS OK
 
         double radian = Math.toRadians(camCoord.getLongitude());
 

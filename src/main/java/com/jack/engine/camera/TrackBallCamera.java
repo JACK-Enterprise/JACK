@@ -224,7 +224,7 @@ public class TrackBallCamera extends PerspectiveCamera {
 
                 CartographyTextureManager manager = new CartographyTextureManager(planet);
 
-                Box box = manager.bindTexturesFromGPSCoord(scene, -totalXAngle, -totalYAngle * 1.5);
+                Box box = manager.bindTexturesFromGPSCoord(scene, camCoord.getLongitude(), camCoord.getLatitude());
                 tile.getChildren().add(box);
 
 
