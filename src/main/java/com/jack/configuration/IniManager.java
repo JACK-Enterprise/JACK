@@ -10,8 +10,8 @@ import java.util.Date;
  * Created by maxim on 21/07/2016.
  */
 public class IniManager {
-    String iniPath;
-    Wini ini;
+    private String iniPath;
+    private Wini ini;
 
     public IniManager(){
         iniPath = "./config.ini";
@@ -45,20 +45,16 @@ public class IniManager {
                     "\n#This file was structured by Maxime Pelte for JACK Enterprise" +
                     "\n#Last modified " + now.toString() + " by System:JACK:App");
 
-            ini.put("user", "lang", "default");
+            ini.put("user", "lang", "en-US");
             ini.put("data", "version", 1.0);
             ini.put("data", "site", "https://github.com/JACK-Enterprise/JACK");
-            ini.put("imagery", "type", "defalut");
-            ini.put("imagery", "server", "default");
-            ini.put("imagery", "layers", "default");
+            ini.put("imagery", "type", "WMS");
+            ini.put("imagery", "server", "http://geoservices.brgm.fr/geologie");
+            ini.put("imagery", "layers", "SCAN_F_GEOL250");
             ini.put("imagery", "port", "default");
-            ini.put("default", "lang", "en-US");
-            ini.put("default", "service", "WMS");
-            ini.put("default", "server", "http://geoservices.brgm.fr/geologie");
-            ini.put("default", "layer", "SCAN_F_GEOL250");
-            ini.put("default", "port", "none");
 
             ini.store();
+
         }
         catch (IOException e){
             System.out.println("Error when reading the configuration file: " + e.getMessage());
@@ -82,6 +78,70 @@ public class IniManager {
     
     public int getIntValue(String section, String key){
         return ini.get(section, key, int.class);
+    }
+
+    public boolean getBooleanValue(String section, String key){
+        return ini.get(section, key, boolean.class);
+    }
+
+    public void putValue(String section, String key, String value){
+        ini.put(section, key, value);
+        try{
+            ini.store();
+        } catch (IOException e){
+            System.out.println("Error when adding value: " + e.getMessage());
+        }
+    }
+
+    public void putValue(String section, String key, int value){
+        ini.put(section, key, value);
+        try{
+            ini.store();
+        } catch (IOException e){
+            System.out.println("Error when adding value: " + e.getMessage());
+        }
+    }
+
+    public void putValue(String section, String key, double value){
+        ini.put(section, key, value);
+        try{
+            ini.store();
+        } catch (IOException e){
+            System.out.println("Error when adding value: " + e.getMessage());
+        }
+    }
+
+    public void putValue(String section, String key, boolean value){
+        ini.put(section, key, value);
+        try{
+            ini.store();
+        } catch (IOException e){
+            System.out.println("Error when adding value: " + e.getMessage());
+        }
+    }
+
+    public void replaceValue(String section, String key, String value){
+        ini.remove(section, key);
+        putValue(section, key, value);
+    }
+
+    public void replaceValue(String section, String key, int value){
+        ini.remove(section, key);
+        putValue(section, key, value);
+    }
+
+    public void replaceValue(String section, String key, double value){
+        ini.remove(section, key);
+        putValue(section, key, value);
+    }
+
+    public void replaceValue(String section, String key, boolean value){
+        ini.remove(section, key);
+        putValue(section, key, value);
+    }
+
+    public void removeValue(String section, String key){
+        ini.remove(section, key);
     }
 }
 
