@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.jack.address.controller.*;
+import com.jack.configuration.IniManager;
 import com.jack.engine.SimpleEngine;
 import com.jack.wms.WMSImageryProvider;
 import javafx.application.Application;
@@ -36,7 +37,7 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
 
-
+        IniManager ini = new IniManager();
 
         initRootLayout();
 /*
