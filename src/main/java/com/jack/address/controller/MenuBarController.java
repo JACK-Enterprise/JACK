@@ -67,4 +67,7 @@ public class MenuBarController {
 
     @FXML
     private void handleImageViewer(){mainApp.showImageViewerWindow();}
+
+    @FXML
+    private void handleServerImagery(){mainApp.showSetServerImagery();}
 }

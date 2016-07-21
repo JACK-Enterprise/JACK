@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import com.jack.address.controller.*;
 import com.jack.configuration.IniManager;
 import com.jack.engine.SimpleEngine;
-import com.jack.wms.WMSImageryProvider;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -207,6 +206,35 @@ public class MainApp extends Application {
             controller.setStage(stage);
             stage.showAndWait();
 
+
+            return controller.isClick();
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showSetServerImagery(){
+        try{
+            // Load XML File
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("/view/SetImageryServerLayout.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the Stage
+            Scene scene = new Scene(page);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle(messages.getString("key.server.conf"));
+            stage.setScene(scene);
+
+            System.out.println(stage.toString());
+
+            SetServerImageryController controller = loader.getController();
+            controller.setServerImageryStage(stage);
+            stage.showAndWait();
 
             return controller.isClick();
         }catch (IOException e){
