@@ -1,5 +1,8 @@
 package com.jack.core;
 
+import java.io.*;
+import java.util.Arrays;
+
 /**
  * Created by Maxime on 14/04/2016.
  */
@@ -37,6 +40,30 @@ public class StdDevLib {
             return true;
 
         return false;
+    }
+
+    public static void readTBCFile(String path){
+        File tbc = new File(path);
+        try {
+            DataInputStream reader = new DataInputStream(new FileInputStream(tbc));
+            try{
+
+                int size = reader.readInt();
+                double[] data = new double[size];
+                for(int i = 0; i < size; i++){
+                    data[i] = reader.readDouble();
+                }
+                reader.close();
+
+                System.out.println(Arrays.toString(data));
+            }
+            catch (IOException e){
+                System.out.println("Error when reading the file: " + e.getMessage());
+            }
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Error when opening the file: " + e.getMessage());
+        }
     }
 
 }

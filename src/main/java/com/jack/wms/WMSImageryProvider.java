@@ -104,16 +104,12 @@ public class WMSImageryProvider  {
         connection.setRequestMethod("GET");
         InputStream imgStream = connection.getInputStream();
 
-
-
-
         //On crée le ficher dans le système de fichiers du système hôte
         if(!new File(folderPath).exists()) {
             new File(folderPath).mkdirs();
-
-            if(!file.exists())
-                file.createNewFile();
         }
+        if(!file.exists())
+            file.createNewFile();
 
         FileOutputStream output = new FileOutputStream(file);
 

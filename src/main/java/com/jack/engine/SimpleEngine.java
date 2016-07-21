@@ -143,17 +143,8 @@ public class SimpleEngine {
         root.getChildren().add(markerGroup);
         
         Group textures = manager.bindTextures(scene, 0, 0, 0, 0);
-        Pos3D pos = new Pos3D(0.2, -3.47, 5.335);
-
-        Box box = createPlane("file:./cartography/wms2.png", pos, 0.5, 0.5);
-
-        Box box2 = manager.bindTexturesPositiv(scene);
-
-        tile.getChildren().add(box);
-        tile.getChildren().add(box2);
 
         root.getChildren().add(textures);
-
 
         camera.setRoot(root);
         

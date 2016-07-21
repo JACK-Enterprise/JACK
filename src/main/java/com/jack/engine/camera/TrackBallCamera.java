@@ -10,6 +10,7 @@ import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
 import com.jack.engine.Planet;
 import static  com.jack.core.JackMath.*;
+import static com.jack.core.StdDevLib.*;
 import com.jack.wms.WMSImageryProvider;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
@@ -23,6 +24,10 @@ import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -48,6 +53,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     private Group tile;
     private StackPane stackPane;
     private Stage stage;
+    private WMSImageryProvider wms;
     @Setter private TrackBallCamera camera;
 
     public TrackBallCamera(double x, double y, double z, Scene scene, Group root) {
@@ -61,6 +67,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.root = root;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
+        wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
         
         setFieldOfView(fov);
         setFarClip(10000);
@@ -85,6 +92,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.tile = tile;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
+        wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
 
         setFieldOfView(fov);
         setFarClip(10000);
@@ -208,16 +216,20 @@ public class TrackBallCamera extends PerspectiveCamera {
 
 
                 EmpriseCoord emprise = xPosbyFov(x, z, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
-                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+
                 try {
                     wms.getMap(emprise);
                 }
                 catch (IOException e){
+                    System.out.println("----------WMS Informations----------");
+                    System.out.println("Error in WMS Provider: " + e.getMessage());
 
                 }
                 GPSCoord camCoord = new GPSCoord();
                 camCoord.setLongitude(-totalXAngle);
                 camCoord.setLatitude(-totalYAngle * 1.5);
+
+                writeCameraOnFile();
 
                 System.out.println();
                 System.out.println("CAM COORD : " + camCoord.getLongitude() + "  " + camCoord.getLatitude());
@@ -234,9 +246,40 @@ public class TrackBallCamera extends PerspectiveCamera {
 
                 stage.show();
 
+                System.out.println("----------TBC FILE-----------");
+                readTBCFile("./cartography/camera.tbc");
+
             }
         };
     }
+
+    private void writeCameraOnFile(){
+        double[] data = {-totalXAngle, -totalYAngle * 1.5};
+        String folderPath = "./cartography";
+        String filePath = "/camera.tbc";
+
+        File camFile = new File(folderPath + filePath);
+
+        if(!new File(folderPath).exists()){
+            new File(folderPath).mkdirs();
+        }
+
+        try{
+            DataOutputStream writer = new DataOutputStream(new FileOutputStream(camFile));
+
+            writer.writeInt(data.length);
+            for(double d : data){
+                writer.writeDouble(d);
+            }
+            writer.close();
+
+        }
+        catch (IOException e){
+            System.out.println("Error when writting file: " + e.getMessage());
+        }
+
+    }
+
     private EventHandler <MouseEvent> bindMouseReleasedEvent(){
         return new EventHandler<MouseEvent>() {
             @Override
