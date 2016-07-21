@@ -4,7 +4,9 @@ import org.ini4j.Wini;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by maxim on 21/07/2016.
@@ -12,6 +14,8 @@ import java.util.Date;
 public class IniManager {
     private String iniPath;
     private Wini ini;
+    private WatchThread watchThread;
+    private Thread thread;
 
     public IniManager(){
         iniPath = "./config.ini";
@@ -142,6 +146,18 @@ public class IniManager {
 
     public void removeValue(String section, String key){
         ini.remove(section, key);
+    }
+
+    public void watchModification(){
+        watchThread = new WatchThread("./");
+        thread = new Thread(watchThread);
+        System.out.println("WatchThread is running!");
+    }
+
+    public void stopWatching() throws InterruptedException{
+        watchThread.terminate();
+        thread.join();
+        System.out.println("WatchThread is stopping!");
     }
 }
 

@@ -26,6 +26,7 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private ResourceBundle messages;
+    private IniManager ini;
 
     /**
      *
@@ -36,7 +37,8 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
 
-        IniManager ini = new IniManager();
+        ini = new IniManager();
+        ini.watchModification();
 
         initRootLayout();
 /*
@@ -244,7 +246,12 @@ public class MainApp extends Application {
     }
 
     public void cancelRequest(){
-        Platform.exit();
-   }
+        try {
+            ini.stopWatching();
+            Platform.exit();
+        }
+        catch (InterruptedException e){
 
+        }
+   }
 }
