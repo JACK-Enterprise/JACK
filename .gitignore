@@ -4,4 +4,7 @@ target/
 Jack.iml
 pom
 exec.bat
+config.ini
+tmp/
+cartography/
 

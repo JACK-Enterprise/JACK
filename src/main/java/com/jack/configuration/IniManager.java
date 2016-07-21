@@ -49,7 +49,7 @@ public class IniManager {
             ini.put("data", "version", 1.0);
             ini.put("data", "site", "https://github.com/JACK-Enterprise/JACK");
             ini.put("imagery", "type", "defalut");
-            ini.put("imagery", "serverpath", "default");
+            ini.put("imagery", "server", "default");
             ini.put("imagery", "layers", "default");
             ini.put("imagery", "port", "default");
             ini.put("default", "lang", "en-US");

@@ -5,6 +5,7 @@
  */
 package com.jack.engine.camera;
 
+import com.jack.configuration.IniManager;
 import com.jack.engine.CartographyTextureManager;
 import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
@@ -67,7 +68,10 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.root = root;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
-        wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+        IniManager iniManager = new IniManager();
+        String url = iniManager.getStringValue("imagery", "server");
+        String layer = iniManager.getStringValue("imagery", "layers");
+        wms = new WMSImageryProvider(url, layer);
         
         setFieldOfView(fov);
         setFarClip(10000);
@@ -92,7 +96,10 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.tile = tile;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
-        wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+        IniManager iniManager = new IniManager();
+        String url = iniManager.getStringValue("imagery", "server");
+        String layer = iniManager.getStringValue("imagery", "layers");
+        wms = new WMSImageryProvider(url, layer);
 
         setFieldOfView(fov);
         setFarClip(10000);
