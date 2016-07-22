@@ -128,13 +128,13 @@ public class JackMath {
         double xPos = Math.tan(Math.toRadians(fov)/ 2) * (Math.abs(zAbs - radius));
         GPSCoord camCoord = new GPSCoord();
         camCoord.setLongitude(-xAngle);
-        camCoord.setLatitude(-yAngle * 1.5);
+        camCoord.setLatitude((-yAngle * 1.5));
 
 
-        double minX = (camCoord.getLongitude() - xPos * 10);
+        double minX = camCoord.getLongitude() - xPos * 10;
         double maxX = camCoord.getLongitude() + xPos * 10;
 
-        double minY = camCoord.getLatitude() - xPos;
+        double minY = camCoord.getLatitude() - xPos * 10;
         double maxY = camCoord.getLatitude() + xPos * 10;
 
         double camPos = camCoord.getLongitude();

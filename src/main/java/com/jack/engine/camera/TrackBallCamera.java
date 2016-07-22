@@ -40,6 +40,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter @Setter private double x;
     @Getter @Setter private double y;
     @Getter @Setter private double z;
+    private double zInit;
     private Scene scene;
     private double lastMouseX;
     private double lastMouseY;
@@ -62,6 +63,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.zInit = z;
         this.fov = 35;
         startFov = this.fov;
         this.scene = scene;
@@ -169,12 +171,23 @@ public class TrackBallCamera extends PerspectiveCamera {
                     totalYAngle = -90;
                 }
                 
+                if(totalXAngle >= 360)
+                {
+                    totalXAngle -= 360;
+                }
+                else if(totalXAngle <= -360)
+                {
+                    totalXAngle += 360;
+                }
+                
                 self.getTransforms().clear();
                 self.getTransforms().add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
                 self.getTransforms().add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
                 self.getTransforms().add(new Translate(x, y, z));
                 lastMouseX = mouseX;
                 lastMouseY = mouseY;
+                
+                updateTiles();
             }
         };
         return ev;
@@ -189,7 +202,14 @@ public class TrackBallCamera extends PerspectiveCamera {
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
 
+                EmpriseCoord emprise = xPosbyFov(x, zInit, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
+                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
+                try {
+                    wms.getMap(emprise);
+                }
+                catch (IOException e){
 
+                }
             }
         };
     }
@@ -221,43 +241,39 @@ public class TrackBallCamera extends PerspectiveCamera {
                     moveSensitivity = 0.0001;
                 }
 
-
-                EmpriseCoord emprise = xPosbyFov(x, z, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
-
-                try {
-                    wms.getMap(emprise);
-                }
-                catch (IOException e){
-                    System.out.println("----------WMS Informations----------");
-                    System.out.println("Error in WMS Provider: " + e.getMessage());
-
-                }
-                GPSCoord camCoord = new GPSCoord();
-                camCoord.setLongitude(-totalXAngle);
-                camCoord.setLatitude(-totalYAngle * 1.5);
-
-                writeCameraOnFile();
-
-                System.out.println();
-                System.out.println("CAM COORD : " + camCoord.getLongitude() + "  " + camCoord.getLatitude());
-
-                CartographyTextureManager manager = new CartographyTextureManager(planet);
-
-                Box box = manager.bindTexturesFromGPSCoord(scene, camCoord.getLongitude(), camCoord.getLatitude());
-                tile.getChildren().add(box);
-
-
-                System.out.println("######################################################");
-                System.out.println(root.getChildren().toString());
-                System.out.println("######################################################");
-
-                stage.show();
-
-                System.out.println("----------TBC FILE-----------");
-                readTBCFile("./cartography/camera.tbc");
-
+                updateTiles();
             }
         };
+    }
+    
+    private void updateTiles()
+    {
+        EmpriseCoord emprise = xPosbyFov(x, zInit, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
+
+        try {
+            wms.getMap(emprise);
+        }
+        catch (IOException e){
+            System.out.println("Error in WMS Provider: " + e.getMessage());
+
+        }
+        GPSCoord camCoord = new GPSCoord();
+        camCoord.setLongitude(-totalXAngle);
+        camCoord.setLatitude(-totalYAngle * 1.5);
+
+        writeCameraOnFile();
+
+        CartographyTextureManager manager = new CartographyTextureManager(planet);
+
+        Box[] boxes = manager.bindTexturesFromGPSCoord(scene, camCoord.getLongitude(), camCoord.getLatitude(), emprise, fov);
+        tile.getChildren().clear();
+        tile.getChildren().addAll(boxes);
+
+        stage.show();
+
+
+        readTBCFile("./cartography/camera.tbc");
+                
     }
 
     private void writeCameraOnFile(){
@@ -292,16 +308,6 @@ public class TrackBallCamera extends PerspectiveCamera {
             @Override
             public void handle(MouseEvent event) {
                 scene.setCursor(javafx.scene.Cursor.DEFAULT);
-
-                EmpriseCoord emprise = xPosbyFov(x, z, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
-                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
-                try {
-                    wms.getMap(emprise);
-                }
-                catch (IOException e){
-
-                }
-
             }
         };
     }

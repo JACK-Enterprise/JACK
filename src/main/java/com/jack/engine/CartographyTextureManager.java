@@ -5,6 +5,8 @@
  */
 package com.jack.engine;
 
+import static java.lang.Math.PI;
+import java.util.ArrayList;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +28,6 @@ import lombok.Setter;
 public class CartographyTextureManager {
     
     @Getter @Setter private Planet planet;
-
     
     public void bindTextures(Scene scene, double fov, double xCenter, double yCenter) {
         
@@ -36,9 +39,9 @@ public class CartographyTextureManager {
         double w = 0.5;
         double h = 0.5;
         double xAngle = Math.toDegrees(Math.acos(-pos.getX() / (radius - pos.getZ()))); // NOT CHECKED
-        double yAngle = Math.toDegrees(Math.acos(pos.getY() / (radius - pos.getZ()))); // SEEMS OK
+        double yAngle = 90 + Math.toDegrees(Math.acos(pos.getY() / (radius - pos.getZ()))); // SEEMS OK
 
-        Box box = createPlane("file:./cartography/wms2.png", pos, w, h);
+        Box box = createPlane("file:./cartography/wms2.png", w, h);
         /*
         box.setRotationAxis(new Point3D(1, 0,  0));
         box.setRotate(Math.toDegrees(xAngle));
@@ -63,7 +66,7 @@ public class CartographyTextureManager {
         //double xAngle = Math.toDegrees(Math.acos(-pos.getX() / (radius - pos.getZ()))); // NOT CHECKED
         //double yAngle = Math.toDegrees(Math.acos(pos.getY() / (radius - pos.getZ()))); // SEEMS OK
 
-        Box box = createPlane("file:./cartography/wms2.png", pos, w, h);
+        Box box = createPlane("file:./cartography/wms2.png", w, h);
 
         /*
         box.setRotationAxis(new Point3D(1, 0,  0));
@@ -77,67 +80,44 @@ public class CartographyTextureManager {
         return box;
     }
 
-    public Box bindTexturesFromGPSCoord(Scene scene, double x, double y) {
+    public Box[] bindTexturesFromGPSCoord(Scene scene, double x, double y, EmpriseCoord emprise, double fov) {
+        
         double radius = planet.getPlanetRadius();
-        GPSCoord camCoord = new GPSCoord(x, y);
-        Pos3D pos = camCoord.toPos3D(radius);
+        GPSCoord minCoord = emprise.getMinCoord();
+        GPSCoord maxCoord = emprise.getMaxCoord();
+        Box[] out;
+        double ifov = 10;
+        double minLg = ((double)(Math.ceil(minCoord.getLongitude() * ifov))) / ifov;
+        double minLat = ((double)(Math.ceil(minCoord.getLatitude() * ifov))) / ifov;
+        double maxLg = ((double)(Math.floor(maxCoord.getLongitude() * ifov))) / ifov;
+        double maxLat = ((double)(Math.floor(maxCoord.getLatitude() * ifov))) / ifov;
+        ArrayList boxes = new ArrayList<Box>();
+        double stepX = 0.25 * fov, stepY = 0.25 * fov;
+        double w = stepX * 2 * PI * radius / 360;
+        double h = stepY * 2 * PI * radius / 360;        
+        
+        for(double i = minLg ; i < maxLg ; i+= stepX)
+        {
+            for(double j = minLat ; j < maxLat ; j+= stepY)
+            {
+                GPSCoord coordTmp = new GPSCoord(i, j);
 
-        System.out.println("----------------------------------------------------");
-        System.out.println("Cartography Texture Manager System Informations");
-        System.out.println("Cam Coord in degree :");
-        System.out.println("    -Longitude : " + camCoord.getLongitude());
-        System.out.println("    -Latitude : " + camCoord.getLatitude());
-        System.out.println();
-        System.out.println("Cam Coord in 3D Pos :");
-        System.out.println("    -X : " + pos.getX());
-        System.out.println("    -Y : " + pos.getY());
-        System.out.println("    -Z : " + pos.getZ());
-        System.out.println();
-        System.out.println("Cam Coord 3D Pos To Degree:");
-        GPSCoord coord = pos.toGPSCoord();
-        System.out.println("    -Longitude : " + coord.getLongitude());
-        System.out.println("    -Latitude : " + coord.getLatitude());
-        System.out.println("----------------------------------------------------");
-
-
-        double w = 0.1;
-        double h = 0.1;
-        double xAngle = Math.toDegrees(Math.acos(-pos.getX() / radius)); // NOT CHECKED
-        double yAngle = Math.toDegrees(Math.acos(pos.getY() / radius)); // SEEMS OK
-
-        double radian = Math.toRadians(camCoord.getLongitude());
-
-        System.out.println("Radian : " + radian);
-        System.out.println("TEst : " + Math.acos(radian));
-        System.out.println("Y Angle : " + yAngle);
-        System.out.println("X Angle : " + xAngle);
-
-        Box box = createPlane("file:./tmp/wms.png", pos, w, h);
-
-        box.setRotationAxis(new Point3D(1, 0,  0));
-        box.setRotate(Math.toDegrees(xAngle));
-        box.setRotationAxis(new Point3D(0, 1,  0));
-        box.setRotate(Math.toDegrees(yAngle));
-
-        System.out.println(xAngle + " / " + yAngle);
-
-        return box;
+                Box box = createPlane("file:./tmp/wms.png", w, h); // SET PATH NAME DYNAMICALLY HERE
+                box.getTransforms().add(new Rotate(-coordTmp.getLongitude(), 0, 0, 0, new Point3D(0, 1, 0)));
+                box.getTransforms().add(new Rotate(-coordTmp.getLatitude() / 1.5, 0, 0, 0, new Point3D(1, 0, 0)));
+                box.getTransforms().add(new Translate(0, 0, -radius));
+                
+                boxes.add(box);
+            }
+        }
+        out = new Box[boxes.size()];
+        boxes.toArray(out);
+        return out; 
     }
     
-    private Box createPlane(String texturePath, Pos3D pos, double w, double h){
-        Box box = new Box(0.1, h, w);
+    private Box createPlane(String texturePath, double w, double h){
+        Box box = new Box(w, h, 0.1);
         PhongMaterial material = new PhongMaterial();
-
-        System.out.println("-------------- CUBE POS ---------------");
-        System.out.println("Cube Coord in 3D Pos :");
-        System.out.println("    -X : " + pos.getX());
-        System.out.println("    -Y : " + pos.getY());
-        System.out.println("    -Z : " + pos.getZ());
-        System.out.println();
-
-        box.setTranslateX(pos.getX());
-        box.setTranslateY(pos.getY());
-        box.setTranslateZ(-pos.getZ());
         
         material.setDiffuseMap(
                 new Image(
