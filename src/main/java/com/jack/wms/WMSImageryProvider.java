@@ -1,12 +1,9 @@
 package com.jack.wms;
 
-
-
 import static com.jack.core.StdDevLib.*;
+import static com.jack.core.JackMath.*;
 import com.jack.core.Description;
 import com.jack.core.DeveloperError;
-
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,18 +11,16 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import com.jack.core.ImageryProvider;
+import java.util.concurrent.Callable;
+
 import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
-
-import javax.imageio.IIOException;
-import javax.imageio.ImageIO;
 
 
 /**
  * Created by Maxime on 04/05/2016.
  */
-public class WMSImageryProvider  {
+public class WMSImageryProvider {
 
     private String serverURL;
     private String layers;
@@ -86,10 +81,24 @@ public class WMSImageryProvider  {
 
     }
 
-    private void buildGetMapUri(){
-        getMapUri = serverURL + getMapTemplate;
-        getMapUri = getMapUri.replace("{format}", defaultParameters.getFormat());
-        getMapUri = getMapUri.replace("{layers}", layers);
+    public void getTiledMap(EmpriseCoord emprise, int xDivision, int yDivision){
+        EmpriseCoord[] splitList = splitEmprise(emprise, xDivision, yDivision);
+
+        int list = 0;
+
+        for(int i = 0; i < yDivision; i++){
+            for(int j = 0; j < xDivision; j++){
+                EmpriseCoord smallTile = splitList[list];
+                try{
+                    getMap(smallTile, list);
+                }
+                catch (IOException e){
+                    System.out.println("Error when getting map: " + e.getMessage());
+                }
+                list++;
+
+            }
+        }
     }
 
     public void getMap(EmpriseCoord emprise) throws MalformedURLException, IOException{
@@ -126,6 +135,23 @@ public class WMSImageryProvider  {
 
     }
 
+    public void getMap(EmpriseCoord emprise, int id) throws MalformedURLException, IOException{
+
+        updateUri(emprise);
+        String folderPath = "./tmp";
+        
+        HTTPRequest httpRequest = new HTTPRequest(getMapUri, id);
+        Thread thread = new Thread(httpRequest);
+        thread.start();
+
+    }
+
+    private void buildGetMapUri(){
+        getMapUri = serverURL + getMapTemplate;
+        getMapUri = getMapUri.replace("{format}", defaultParameters.getFormat());
+        getMapUri = getMapUri.replace("{layers}", layers);
+    }
+
     private void updateUri(int minX, int minY, int maxX, int maxY){
         buildGetMapUri();
         getMapUri = getMapUri.replace("{minX}", ""+minX);
@@ -159,10 +185,5 @@ public class WMSImageryProvider  {
 
         System.out.println(getMapUri);
     }
-
-
-
-
-
 
 }

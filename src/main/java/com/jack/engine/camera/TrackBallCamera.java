@@ -250,13 +250,8 @@ public class TrackBallCamera extends PerspectiveCamera {
     {
         EmpriseCoord emprise = xPosbyFov(x, zInit, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
 
-        try {
-            wms.getMap(emprise);
-        }
-        catch (IOException e){
-            System.out.println("Error in WMS Provider: " + e.getMessage());
+        wms.getTiledMap(emprise, 5, 5);
 
-        }
         GPSCoord camCoord = new GPSCoord();
         camCoord.setLongitude(-totalXAngle);
         camCoord.setLatitude(-totalYAngle * 1.5);

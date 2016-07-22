@@ -150,6 +150,37 @@ public class JackMath {
         return emprise;
     }
 
+    public static EmpriseCoord[] splitEmprise(EmpriseCoord emprise, int x, int y){
+        EmpriseCoord[] tiledEmprise = new EmpriseCoord[x*y];
+
+        GPSCoord min = emprise.getMinCoord();
+        GPSCoord max = emprise.getMaxCoord();
+        double minLong = min.getLongitude();
+        double minLat = min.getLatitude();
+        double xCoordSize = max.getLongitude() - minLong;
+        double yCoordSize = max.getLatitude() - minLat;
+
+        double xToAdd = xCoordSize / (double)x;
+        double yToAdd = yCoordSize / (double)y;
+
+        int i = 0;
+        int j = 0;
+        int list = 0;
+
+        for (i = 0; i < y; i++){
+            double maxLat = minLat + yCoordSize;
+            minLong = min.getLongitude();
+            for(j = 0; j < x; j++){
+                double maxLong = minLong + xCoordSize;
+                tiledEmprise[list] = new EmpriseCoord(minLong, minLat, maxLong, maxLat);
+                minLong = maxLong;
+                list++;
+            }
+            minLat = maxLat;
+        }
+
+        return tiledEmprise;
+    }
 
 
 }
