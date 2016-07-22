@@ -23,6 +23,7 @@ public class IniManager {
         if(!ifExist()){
             try{
                 new File(iniPath).createNewFile();
+                ini = new Wini(new File(iniPath));
                 resetDefaultFile();
             }
             catch (IOException e){
@@ -30,11 +31,13 @@ public class IniManager {
             }
         }
 
-        try{
-            ini = new Wini(new File(iniPath));
-        }
-        catch (IOException e){
-            System.out.println("Error when opening the configuration file: " + e.getMessage());
+        else {
+
+            try {
+                ini = new Wini(new File(iniPath));
+            } catch (IOException e) {
+                System.out.println("Error when opening the configuration file: " + e.getMessage());
+            }
         }
 
     }
@@ -66,10 +69,7 @@ public class IniManager {
     }
 
     private boolean ifExist(){
-        if(new File(iniPath).exists())
-            return true;
-        else
-            return false;
+        return new File(iniPath).exists();
     }
 
     public String getStringValue(String section, String key){

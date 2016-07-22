@@ -83,6 +83,32 @@ public class Planet extends Sphere {
                 material
         );
     }
+
+    public void initWithoutBumpMap(){
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(
+                new Image(
+                        diffuseMap.toString(),
+                        MAP_WIDTH,
+                        MAP_HEIGHT,
+                        true,
+                        true
+                )
+        );
+        material.setSpecularMap(
+                new Image(
+                        specularMap.toString(),
+                        MAP_WIDTH,
+                        MAP_HEIGHT,
+                        true,
+                        true
+                )
+        );
+
+        this.setMaterial(
+                material
+        );
+    }
     
     public void addToContainer(Group container) {
         setAtmosphere(container);

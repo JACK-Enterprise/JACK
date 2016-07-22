@@ -95,7 +95,7 @@ public class SimpleEngine {
         ambientLight.setTranslateX(30);
         ambientLight.setTranslateZ(30);
 
-        earth.init();
+        earth.initWithoutBumpMap();
         camera.setPlanet(earth);
 
         pos = gpsCoord.toPos3D(earth.getPlanetRadius());

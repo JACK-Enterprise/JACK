@@ -38,7 +38,7 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("JACK");
 
         ini = new IniManager();
-        ini.watchModification();
+       // ini.watchModification();
 
         initRootLayout();
 /*
