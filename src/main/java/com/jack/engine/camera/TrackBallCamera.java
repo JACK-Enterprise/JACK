@@ -57,6 +57,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     private Stage stage;
     private WMSImageryProvider wms;
     @Setter private TrackBallCamera camera;
+    private CartographyTextureManager manager;
 
     public TrackBallCamera(double x, double y, double z, Scene scene, Group root) {
         super(true);
@@ -116,6 +117,7 @@ public class TrackBallCamera extends PerspectiveCamera {
 
     public void setPlanet(Planet planet) {
         this.planet = planet;
+        manager = new CartographyTextureManager(planet);
     }
 
     public void setScene(Scene scene) {
@@ -171,11 +173,11 @@ public class TrackBallCamera extends PerspectiveCamera {
                     totalYAngle = -90;
                 }
                 
-                if(totalXAngle >= 360)
+                if(totalXAngle >= 180)
                 {
                     totalXAngle -= 360;
                 }
-                else if(totalXAngle <= -360)
+                else if(totalXAngle <= -180)
                 {
                     totalXAngle += 360;
                 }
@@ -186,7 +188,6 @@ public class TrackBallCamera extends PerspectiveCamera {
                 self.getTransforms().add(new Translate(x, y, z));
                 lastMouseX = mouseX;
                 lastMouseY = mouseY;
-                
                 updateTiles();
             }
         };
@@ -201,15 +202,6 @@ public class TrackBallCamera extends PerspectiveCamera {
                 scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 lastMouseX = event.getScreenX();
                 lastMouseY = event.getScreenY();
-
-                EmpriseCoord emprise = xPosbyFov(x, zInit, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
-                WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
-                try {
-                    wms.getMap(emprise);
-                }
-                catch (IOException e){
-
-                }
             }
         };
     }
@@ -240,8 +232,6 @@ public class TrackBallCamera extends PerspectiveCamera {
                 {
                     moveSensitivity = 0.0001;
                 }
-
-                updateTiles();
             }
         };
     }
@@ -250,7 +240,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     {
         EmpriseCoord emprise = xPosbyFov(x, zInit, fov, planet.getPlanetRadius(), totalXAngle, totalYAngle);
 
-        wms.getTiledMap(emprise, 5, 5);
+        wms.getTiledMap(emprise, fov, planet.getPlanetRadius());
 
         GPSCoord camCoord = new GPSCoord();
         camCoord.setLongitude(-totalXAngle);
@@ -258,11 +248,7 @@ public class TrackBallCamera extends PerspectiveCamera {
 
         writeCameraOnFile();
 
-        CartographyTextureManager manager = new CartographyTextureManager(planet);
-
-        Box[] boxes = manager.bindTexturesFromGPSCoord(scene, camCoord.getLongitude(), camCoord.getLatitude(), emprise, fov);
-        tile.getChildren().clear();
-        tile.getChildren().addAll(boxes);
+        manager.bindTexturesFromGPSCoord(scene, camCoord.getLongitude(), camCoord.getLatitude(), emprise, fov, tile);
 
         stage.show();
 

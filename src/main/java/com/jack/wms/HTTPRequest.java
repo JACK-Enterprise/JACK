@@ -13,10 +13,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HTTPRequest implements Runnable {
 
     protected volatile String uri;
-    protected volatile int id;
+    protected volatile String id;
     private URL url;
 
-    public HTTPRequest(String uri, int id){
+    public HTTPRequest(String uri, String id){
         this.uri = uri;
         this.id = id;
         try {

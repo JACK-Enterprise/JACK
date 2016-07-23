@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import com.jack.address.controller.*;
 import com.jack.configuration.IniManager;
 import com.jack.engine.SimpleEngine;
+import java.io.File;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,17 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
+        File folder = new File("./tmp");
+        
+        if(folder.exists()) {
+            File[] files = folder.listFiles();
+            if(files!=null) {
+                for(File f: files) {
+                    f.delete();
+                }
+            }
+            folder.delete();
+        }
 
         ini = new IniManager();
        // ini.watchModification();
@@ -248,7 +260,6 @@ public class MainApp extends Application {
     public void cancelRequest(){
         try {
             ini.stopWatching();
-            Platform.exit();
         }
         catch (InterruptedException e){
 
