@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Callable;
 
 import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
@@ -140,8 +139,8 @@ public class WMSImageryProvider {
         updateUri(emprise);
         String folderPath = "./tmp";
         
-        HTTPRequest httpRequest = new HTTPRequest(getMapUri, id);
-        Thread thread = new Thread(httpRequest);
+        HTTPRequestThread httpRequestThread = new HTTPRequestThread(getMapUri, id);
+        Thread thread = new Thread(httpRequestThread);
         thread.start();
 
     }
