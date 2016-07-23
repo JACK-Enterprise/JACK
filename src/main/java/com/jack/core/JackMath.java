@@ -167,16 +167,16 @@ public class JackMath {
         int j = 0;
         int list = 0;
 
-        for (i = 0; i < y; i++){
-            double maxLat = minLat + yCoordSize;
-            minLong = min.getLongitude();
-            for(j = 0; j < x; j++){
-                double maxLong = minLong + xCoordSize;
+        for (i = 0; i < x; i++){
+            double maxLong = minLong + xToAdd;
+            minLat = min.getLatitude();
+            for(j = 0; j < y; j++){
+                double maxLat = minLat + yToAdd;
                 tiledEmprise[list] = new EmpriseCoord(minLong, minLat, maxLong, maxLat);
-                minLong = maxLong;
+                minLat = maxLat;
                 list++;
             }
-            minLat = maxLat;
+            minLong = maxLong;
         }
 
         return tiledEmprise;

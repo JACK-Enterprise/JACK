@@ -95,19 +95,20 @@ public class CartographyTextureManager {
         double stepX = 0.25 * fov, stepY = 0.25 * fov;
         double w = stepX * 2 * PI * radius / 360;
         double h = stepY * 2 * PI * radius / 360;        
-        
+        int tileID = 0;
         for(double i = minLg ; i < maxLg ; i+= stepX)
         {
             for(double j = minLat ; j < maxLat ; j+= stepY)
             {
                 GPSCoord coordTmp = new GPSCoord(i, j);
 
-                Box box = createPlane("file:./tmp/wms.png", w, h); // SET PATH NAME DYNAMICALLY HERE
+                Box box = createPlane("file:./tmp/" + tileID+".png", w, h); // SET PATH NAME DYNAMICALLY HERE
                 box.getTransforms().add(new Rotate(-coordTmp.getLongitude(), 0, 0, 0, new Point3D(0, 1, 0)));
                 box.getTransforms().add(new Rotate(-coordTmp.getLatitude() / 1.5, 0, 0, 0, new Point3D(1, 0, 0)));
                 box.getTransforms().add(new Translate(0, 0, -radius));
                 
                 boxes.add(box);
+                tileID++;
             }
         }
         out = new Box[boxes.size()];

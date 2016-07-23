@@ -86,8 +86,8 @@ public class WMSImageryProvider {
 
         int list = 0;
 
-        for(int i = 0; i < yDivision; i++){
-            for(int j = 0; j < xDivision; j++){
+        for(int i = 0; i < xDivision; i++){
+            for(int j = 0; j < yDivision; j++){
                 EmpriseCoord smallTile = splitList[list];
                 try{
                     getMap(smallTile, list);
