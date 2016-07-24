@@ -93,7 +93,7 @@ public class SimpleEngine {
         
         ambientLight.setColor(Color.color(0.4, 0.4, 0.4));
         ambientLight.setTranslateX(30);
-        ambientLight.setTranslateZ(30);
+        ambientLight.setTranslateZ(-30);
 
         earth.initWithoutBumpMap();
         camera.setPlanet(earth);

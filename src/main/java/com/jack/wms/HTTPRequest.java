@@ -30,6 +30,7 @@ public class HTTPRequest implements Runnable {
     public synchronized void run(){
         try {
 
+            System.out.println(url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream imgStream = connection.getInputStream();

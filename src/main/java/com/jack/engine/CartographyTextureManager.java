@@ -127,23 +127,23 @@ public class CartographyTextureManager {
             GPSCoord bottomRight, GPSCoord topRight, double res, double radius){
         
         final MeshView box;
-        double smallW = topLeft.getSphericalDistance(topRight, radius) / 2;
-        double h = topLeft.getSphericalDistance(bottomLeft, radius) / 2;
-        double bigW = bottomLeft.getSphericalDistance(bottomRight, radius) / 2;
+        double smallW = topLeft.toPos3D(radius).getAlgebricDistance(topRight.toPos3D(radius));
+        double h = topLeft.toPos3D(radius).getAlgebricDistance(bottomLeft.toPos3D(radius));
+        double bigW = bottomLeft.toPos3D(radius).getAlgebricDistance(bottomRight.toPos3D(radius));
         int[] faces = {
                     2, 3, 0, 2, 1, 0,
                     2, 3, 1, 0, 3, 1
             };
         TriangleMesh pyramidMesh = new TriangleMesh();
-        float[] arr = { -(float)(smallW), (float)h,    0,
-                        -(float)(bigW), -(float)h, 0,                        
+        float[] arr = { 0, (float)h,    0,
+                        0, 0, 0,                        
                         (float)(smallW), (float) h,    0,
-                        (float)(bigW), -(float)h,    0};
+                        (float)(bigW), 0,    0};
         float[] texCoords = {
-                    1, 1, // idx t0
-                    1, 0, // idx t1
-                    0, 1, // idx t2
-                    0, 0  // idx t3
+                    0, 0, // idx t2
+                    1, 0,  // idx t3
+                    0, 1, // idx t0
+                    1, 1, // idx t1
             };
         PhongMaterial material = new PhongMaterial();
         pyramidMesh.getPoints().addAll(arr);
