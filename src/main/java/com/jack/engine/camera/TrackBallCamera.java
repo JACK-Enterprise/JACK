@@ -158,7 +158,7 @@ public class TrackBallCamera extends PerspectiveCamera {
                 scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 double mouseX = event.getScreenX();
                 double mouseY = event.getScreenY();
-                double xrel = (lastMouseX - mouseX) * moveSensitivity;
+                double xrel = -(lastMouseX - mouseX) * moveSensitivity;
                 double yrel = (lastMouseY - mouseY)* moveSensitivity;
                 
                 totalXAngle += xrel;
@@ -217,8 +217,8 @@ public class TrackBallCamera extends PerspectiveCamera {
                     fov = 35;
                 }
 
-                if(fov < 0.0001){
-                    fov = 0.0001;
+                if(fov < 0.1){
+                    fov = 0.1;
                 }
 
                 setFieldOfView(fov);
@@ -228,10 +228,11 @@ public class TrackBallCamera extends PerspectiveCamera {
                 {
                     moveSensitivity = 0.4;
                 }
-                else if(moveSensitivity < 0.0001)
+                else if(moveSensitivity < 0.001)
                 {
-                    moveSensitivity = 0.0001;
+                    moveSensitivity = 0.001;
                 }
+                updateTiles();
             }
         };
     }

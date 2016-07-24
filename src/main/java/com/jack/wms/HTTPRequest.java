@@ -30,13 +30,12 @@ public class HTTPRequest implements Runnable {
     public synchronized void run(){
         try {
 
-            System.out.println(url.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream imgStream = connection.getInputStream();
 
             String folderPath = "./tmp";
-            File file = new File(folderPath + "/"+id+".png");
+            File file = new File(folderPath + "/"+id+".jpg");
             //On crée le ficher dans le système de fichiers du système hôte
             if(!new File(folderPath).exists()) {
                 new File(folderPath).mkdirs();

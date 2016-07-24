@@ -87,7 +87,7 @@ public class WMSImageryProvider {
                 "&BBOX={minX},{minY},{maxX},{maxY}" +
                 "&WIDTH={res}" +
                 "&HEIGHT={res}" +
-                "&FORMAT=image/png";
+                "&FORMAT=image/jpg";
 
     }
 
@@ -101,10 +101,10 @@ public class WMSImageryProvider {
         double maxLg = Math.ceil(maxCoord.getLongitude() / stepX) * stepX;
         double maxLat = Math.ceil(maxCoord.getLatitude() / stepY) * stepY;
         double w = stepX * 2 * PI * radius / 360;
-        double h = stepY * 2 * PI * radius / 360;
+        double h = stepY * 2 * PI * radius / 180;
         double nextI;
         double nextJ;
-        int res = fov > 20 ? 32 : (fov > 10 ? 64 : (fov > 5 ? 128 : 256));
+        int res = fov > 20 ? 32 : (fov > 10 ? 64 : (fov > 1? 128 : 256));
 
         for(double i = minLg ; i < maxLg ; i+=stepX)
         {
@@ -135,7 +135,7 @@ public class WMSImageryProvider {
                     
                     EmpriseCoord tmp = new EmpriseCoord(i, j, nextI, nextJ);
                     updateUri(i, j, nextI, nextJ, res);
-                    File f = new File("./tmp/" + i + "_" + j + "_" + res + ".png");
+                    File f = new File("./tmp/" + i + "_" + j + "_" + res + ".jpg");
                     if(!f.exists())
                     {
                         getMap(tmp, i + "_" + j + "_" + res, res);

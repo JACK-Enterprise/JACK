@@ -125,16 +125,16 @@ public class JackMath {
     public static EmpriseCoord xPosbyFov (double x, double z, double fov, double radius, double xAngle, double yAngle) {
 
         double zAbs = Math.abs(z);
-        double xPos = Math.tan(Math.toRadians(fov)/ 2) * (Math.abs(zAbs - radius));
+        double res = fov > 1? 1 : 0.5;
+        double xPos = res * Math.tan(Math.toRadians(35)/ 2) * (Math.abs(zAbs - radius));
         GPSCoord camCoord = new GPSCoord();
         camCoord.setLongitude(-xAngle);
         camCoord.setLatitude((-yAngle * 1.5));
+        double minX = camCoord.getLongitude() - xPos * 2;
+        double maxX = camCoord.getLongitude() + xPos * 2;
 
-        double minX = camCoord.getLongitude() - xPos;
-        double maxX = camCoord.getLongitude() + xPos;
-
-        double minY = camCoord.getLatitude() - xPos;
-        double maxY = camCoord.getLatitude() + xPos;
+        double minY = camCoord.getLatitude() - xPos * 2;
+        double maxY = camCoord.getLatitude() + xPos * 2;
 
         double camPos = camCoord.getLongitude();
 

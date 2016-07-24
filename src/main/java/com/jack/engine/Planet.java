@@ -60,7 +60,7 @@ public class Planet extends Sphere {
                         true
                 )
         );
-        material.setBumpMap(
+        /*material.setBumpMap(
                 new Image(
                         bumpMap.toString(),
                         MAP_WIDTH,
@@ -68,7 +68,7 @@ public class Planet extends Sphere {
                         true,
                         true
                 )
-        );
+        );*/
         material.setSpecularMap(
                 new Image(
                         specularMap.toString(),
