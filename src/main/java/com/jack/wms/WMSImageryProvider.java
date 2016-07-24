@@ -18,6 +18,8 @@ import com.jack.engine.GPSCoord;
 import static java.lang.Math.PI;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -92,17 +94,17 @@ public class WMSImageryProvider {
     public void getTiledMap(EmpriseCoord emprise, double fov, double radius){
         GPSCoord minCoord = emprise.getMinCoord();
         GPSCoord maxCoord = emprise.getMaxCoord();
-        double stepX = 2;
-        double stepY = 2;
+        double stepX = 1;
+        double stepY = 1;
         double minLg = Math.floor(minCoord.getLongitude() / stepX) * stepX;
         double minLat = Math.floor(minCoord.getLatitude() / stepY) * stepY;
         double maxLg = Math.ceil(maxCoord.getLongitude() / stepX) * stepX;
         double maxLat = Math.ceil(maxCoord.getLatitude() / stepY) * stepY;
-        double w = 2 * PI * radius / 360;
-        double h = 2 * PI * radius / 360;
+        double w = stepX * 2 * PI * radius / 360;
+        double h = stepY * 2 * PI * radius / 360;
         double nextI;
         double nextJ;
-        int res = fov > 40 ? 256 : (fov > 20 ? 512 : (fov > 10 ? 1024 : 2048));
+        int res = fov > 20 ? 32 : (fov > 10 ? 64 : (fov > 5 ? 128 : 256));
 
         for(double i = minLg ; i < maxLg ; i+=stepX)
         {
@@ -133,7 +135,7 @@ public class WMSImageryProvider {
                     
                     EmpriseCoord tmp = new EmpriseCoord(i, j, nextI, nextJ);
                     updateUri(i, j, nextI, nextJ, res);
-                    File f = new File("file:./tmp/" + i + "_" + j + "_" + res + ".png");
+                    File f = new File("./tmp/" + i + "_" + j + "_" + res + ".png");
                     if(!f.exists())
                     {
                         getMap(tmp, i + "_" + j + "_" + res, res);
@@ -143,6 +145,20 @@ public class WMSImageryProvider {
                 catch (IOException e){
                     System.out.println("Error when getting map: " + e.getMessage());
                 }
+            }
+        }
+        
+        for (Thread thread : threadList)
+        {
+            try {
+                synchronized (thread) {
+                    while (thread.isAlive()) {
+                        thread.wait();
+                    }
+                    thread.interrupt();
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(WMSImageryProvider.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -182,11 +198,6 @@ public class WMSImageryProvider {
 
         updateUri(emprise, res);
         String folderPath = "./tmp";
-        
-        if(threadList.size() > THREAD_NUMBER_LIMIT)
-        {
-            Thread first = threadList.removeFirst();
-        }
         
         HTTPRequest httpRequest = new HTTPRequest(getMapUri, id);
         Thread thread = new Thread(httpRequest);

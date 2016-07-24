@@ -20,7 +20,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.CullFace;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import lombok.AllArgsConstructor;
@@ -34,12 +37,12 @@ import lombok.Setter;
 public class CartographyTextureManager {
     
     @Getter @Setter private Planet planet;
-    private HashMap<String, Box> prevBoxesList;
+    private HashMap<String, MeshView> prevBoxesList;
     
     public CartographyTextureManager(Planet planet)
     {
         this.planet = planet;
-        prevBoxesList = new HashMap<String, Box>();
+        prevBoxesList = new HashMap<String, MeshView>();
     }
     
 
@@ -48,30 +51,41 @@ public class CartographyTextureManager {
         double radius = planet.getPlanetRadius();
         GPSCoord minCoord = emprise.getMinCoord();
         GPSCoord maxCoord = emprise.getMaxCoord();
-        double stepX = 2;
-        double stepY = 2;
+        double stepX = 1;
+        double stepY = 1;
         double minLg = Math.floor(minCoord.getLongitude() / stepX) * stepX;
         double minLat = Math.floor(minCoord.getLatitude() / stepY) * stepY;
         double maxLg = Math.ceil(maxCoord.getLongitude() / stepX) * stepX;
         double maxLat = Math.ceil(maxCoord.getLatitude() / stepY) * stepY;
-        ArrayList boxes = new ArrayList<Box>();
+        ArrayList boxes = new ArrayList<MeshView>();
         double w = stepX * 2 * PI * radius / 360;
         double h = stepY * 2 * PI * radius / 360;        
-        int res = fov > 40 ? 256 : (fov > 20 ? 512 : (fov > 10 ? 1024 : 2048));
+        int res = fov > 20 ? 32 : (fov > 10 ? 64 : (fov > 5 ? 128 : 256));
+        double nextI;
+        double nextJ;
         
-        HashMap<String, Box> tmpMap = new HashMap<String, Box>();
+        HashMap<String, MeshView> tmpMap = new HashMap<String, MeshView>();
         
         for(double i = minLg ; i < maxLg ; i+=stepX)
         {
+            nextI = i+stepX;
+            
             for(double j = minLat ; j < maxLat ; j+=stepY)
             {
+                nextJ = j+stepY;
                 String filename = "file:./tmp/" + i + "_" + j + "_" + res + ".png";
                 
                 if(!prevBoxesList.containsKey(filename))
                 {
                     GPSCoord coordTmp = new GPSCoord(i, j);
+                    GPSCoord nextCoordI = new GPSCoord(nextI, j);
+                    GPSCoord nextCoordJ = new GPSCoord(i, nextJ);
+                    GPSCoord nextCoordIJ = new GPSCoord(nextI, nextJ);
 
-                    Box box = createPlane(filename, w, h, res);
+                    MeshView box = createPlane(filename,nextCoordJ,
+                                                coordTmp,
+                                                nextCoordI,
+                                                nextCoordIJ, res, planet.getRadius());
                     box.getTransforms().add(new Rotate(-coordTmp.getLongitude(), 0, 0, 0, new Point3D(0, 1, 0)));
                     box.getTransforms().add(new Rotate(-coordTmp.getLatitude() / 1.5, 0, 0, 0, new Point3D(1, 0, 0)));
                     box.getTransforms().add(new Translate(0, 0, -radius));
@@ -100,7 +114,7 @@ public class CartographyTextureManager {
         
         for(String k : tmpMap.keySet())
         {
-            Box b = tmpMap.get(k);
+            MeshView b = tmpMap.get(k);
             if(b != null)
             {
                 prevBoxesList.put(k, b);
@@ -109,10 +123,32 @@ public class CartographyTextureManager {
         group.getChildren().addAll(boxes);
     }
     
-    private Box createPlane(String texturePath, double w, double h, double res){
-        Box box = new Box(w, h, 0.001);
-        PhongMaterial material = new PhongMaterial();
+    private MeshView createPlane(String texturePath, GPSCoord bottomLeft, GPSCoord topLeft,
+            GPSCoord bottomRight, GPSCoord topRight, double res, double radius){
         
+        final MeshView box;
+        double smallW = topLeft.getSphericalDistance(topRight, radius) / 2;
+        double h = topLeft.getSphericalDistance(bottomLeft, radius) / 2;
+        double bigW = bottomLeft.getSphericalDistance(bottomRight, radius) / 2;
+        int[] faces = {
+                    2, 3, 0, 2, 1, 0,
+                    2, 3, 1, 0, 3, 1
+            };
+        TriangleMesh pyramidMesh = new TriangleMesh();
+        float[] arr = { -(float)(smallW), (float)h,    0,
+                        -(float)(bigW), -(float)h, 0,                        
+                        (float)(smallW), (float) h,    0,
+                        (float)(bigW), -(float)h,    0};
+        float[] texCoords = {
+                    1, 1, // idx t0
+                    1, 0, // idx t1
+                    0, 1, // idx t2
+                    0, 0  // idx t3
+            };
+        PhongMaterial material = new PhongMaterial();
+        pyramidMesh.getPoints().addAll(arr);
+        pyramidMesh.getTexCoords().addAll(texCoords);
+        pyramidMesh.getFaces().addAll(faces);
         material.setDiffuseMap(
                 new Image(
                         texturePath,
@@ -122,8 +158,10 @@ public class CartographyTextureManager {
                         true
                 )
         );
-
+        
+        box = new MeshView(pyramidMesh);
         box.setMaterial(material);
+        box.setCullFace(CullFace.NONE);
         
         return box;
     }

@@ -130,12 +130,11 @@ public class JackMath {
         camCoord.setLongitude(-xAngle);
         camCoord.setLatitude((-yAngle * 1.5));
 
+        double minX = camCoord.getLongitude() - xPos;
+        double maxX = camCoord.getLongitude() + xPos;
 
-        double minX = camCoord.getLongitude() - xPos * 10;
-        double maxX = camCoord.getLongitude() + xPos * 10;
-
-        double minY = camCoord.getLatitude() - xPos * 10;
-        double maxY = camCoord.getLatitude() + xPos * 10;
+        double minY = camCoord.getLatitude() - xPos;
+        double maxY = camCoord.getLatitude() + xPos;
 
         double camPos = camCoord.getLongitude();
 

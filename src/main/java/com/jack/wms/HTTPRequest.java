@@ -27,7 +27,7 @@ public class HTTPRequest implements Runnable {
         }
     }
 
-    public void run(){
+    public synchronized void run(){
         try {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -59,12 +59,7 @@ public class HTTPRequest implements Runnable {
         catch (IOException e){
 
         }
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException e){
-
-        }
-
+        
+        this.notifyAll();
     }
 }
