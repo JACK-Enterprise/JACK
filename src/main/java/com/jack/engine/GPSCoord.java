@@ -32,4 +32,28 @@ public class GPSCoord {
     {
         return 2 * PI * radius;
     }
+    
+    public Pos3D toPos3D(double sphereRadius) {
+        GPSCoord radians = new GPSCoord();
+        
+        radians.setLongitude(Math.toRadians(longitude));
+        radians.setLatitude(Math.toRadians(latitude / 1.5));
+        
+        return calculate3DPos(radians, sphereRadius);
+    }
+    
+    private Pos3D calculate3DPos(GPSCoord pos2D, double sphereRadius)
+    {
+        Pos3D spherePos = new Pos3D();
+        double cosOmega = cos(-pos2D.getLatitude());
+        double sinOmega = sin(-pos2D.getLatitude());
+        double cosTheta = cos(pos2D.getLongitude());
+        double sinTheta = sin(pos2D.getLongitude());
+        
+        spherePos.setZ(sphereRadius * cosOmega * cosTheta);
+        spherePos.setX(sphereRadius * cosOmega * sinTheta);
+        spherePos.setY(sphereRadius * sinOmega);
+        
+        return spherePos;
+    }
 }

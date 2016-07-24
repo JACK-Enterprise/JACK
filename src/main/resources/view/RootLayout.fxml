@@ -24,6 +24,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleGetCapabilities" text="%key.getCapabilities" />
                   <MenuItem mnemonicParsing="false" onAction="#handleImageViewer" text="%key.imageViewer" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleServerImagery" text="%key.server.conf" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="%key.plugin">
               <items>

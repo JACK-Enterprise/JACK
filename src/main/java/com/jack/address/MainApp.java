@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.jack.address.controller.*;
+import com.jack.configuration.IniManager;
 import com.jack.engine.SimpleEngine;
-import com.jack.wms.WMSImageryProvider;
+import java.io.File;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private ResourceBundle messages;
+    private IniManager ini;
 
     /**
      *
@@ -35,11 +37,23 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("JACK");
+        File folder = new File("./tmp");
+        
+        if(folder.exists()) {
+            File[] files = folder.listFiles();
+            if(files!=null) {
+                for(File f: files) {
+                    f.delete();
+                }
+            }
+            folder.delete();
+        }
 
-
+        ini = new IniManager();
+       // ini.watchModification();
 
         initRootLayout();
-
+/*
         WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
         try {
             wms.getMap();
@@ -47,6 +61,7 @@ public class MainApp extends Application {
         catch (IOException e){
 
         }
+        */
     }
 
     /**
@@ -73,6 +88,8 @@ public class MainApp extends Application {
             rootLayout.setCenter(stackPane);
 
             primaryStage.setScene(scene);
+            se.setStage(primaryStage);
+            se.initCameraConfig();
             primaryStage.show();
             //earthViewer.rotateAroundYAxis(stackPane).play();
 
@@ -211,8 +228,41 @@ public class MainApp extends Application {
         }
     }
 
-    public void cancelRequest(){
-        Platform.exit();
-   }
+    public boolean showSetServerImagery(){
+        try{
+            // Load XML File
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(messages);
+            loader.setLocation(MainApp.class.getResource("/view/SetImageryServerLayout.fxml"));
+            AnchorPane page = loader.load();
 
+            // Create the Stage
+            Scene scene = new Scene(page);
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle(messages.getString("key.server.conf"));
+            stage.setScene(scene);
+
+            System.out.println(stage.toString());
+
+            SetServerImageryController controller = loader.getController();
+            controller.setServerImageryStage(stage);
+            stage.showAndWait();
+
+            return controller.isClick();
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void cancelRequest(){
+        try {
+            ini.stopWatching();
+        }
+        catch (InterruptedException e){
+
+        }
+   }
 }

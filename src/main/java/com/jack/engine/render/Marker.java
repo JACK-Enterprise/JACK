@@ -7,7 +7,6 @@ package com.jack.engine.render;
 
 import com.jack.engine.GPSCoord;
 import com.jack.engine.Pos3D;
-import com.jack.engine.geometry.SphereCoordinates;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -31,8 +30,7 @@ public class Marker {
     public void render(Group root, double radius)
     {
         Sphere sphere = new Sphere(0.2);
-        SphereCoordinates coords = new SphereCoordinates(gpsCoord);
-        Pos3D pos = coords.get3DPosUsingDegrees(radius);
+        Pos3D pos = gpsCoord.toPos3D(radius);
         
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Color.RED);

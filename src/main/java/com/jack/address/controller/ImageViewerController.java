@@ -42,7 +42,7 @@ public class ImageViewerController {
     @FXML
     private void handleButton(){
 
-        String path = "file:./tmp/imgTest.png";
+        String path = "file:./tmp/wms.png";
         Image img = new Image(path);
         imageContainer.setImage(img);
         

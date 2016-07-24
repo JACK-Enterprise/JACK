@@ -39,7 +39,16 @@ public class Planet extends Sphere {
     public double getPlanetRadius() {
         return radius;
     }
-    
+
+
+    public void setPlanetRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public void setDiffuseMap(Path diffuseMap) {
+        this.diffuseMap = diffuseMap;
+    }
+
     public void init() {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(
@@ -51,9 +60,35 @@ public class Planet extends Sphere {
                         true
                 )
         );
-        material.setBumpMap(
+        /*material.setBumpMap(
                 new Image(
                         bumpMap.toString(),
+                        MAP_WIDTH,
+                        MAP_HEIGHT,
+                        true,
+                        true
+                )
+        );*/
+        material.setSpecularMap(
+                new Image(
+                        specularMap.toString(),
+                        MAP_WIDTH,
+                        MAP_HEIGHT,
+                        true,
+                        true
+                )
+        );
+
+        this.setMaterial(
+                material
+        );
+    }
+
+    public void initWithoutBumpMap(){
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(
+                new Image(
+                        diffuseMap.toString(),
                         MAP_WIDTH,
                         MAP_HEIGHT,
                         true,

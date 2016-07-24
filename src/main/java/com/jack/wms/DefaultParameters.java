@@ -16,7 +16,7 @@ public class DefaultParameters {
         version = "1.1.1";
         request = "GetMap";
         style = "";
-        format = "image/png";
+        format = "image/jpg";
     }
 
     public String getService() {

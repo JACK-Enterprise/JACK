@@ -3,7 +3,6 @@ package com.jack.engine;
 
 
 import com.jack.engine.camera.TrackBallCamera;
-import com.jack.engine.geometry.SphereCoordinates;
 import com.jack.engine.render.Marker;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.stage.Stage;
 
 /**
  * Created by Maxime on 18/05/2016.
@@ -45,8 +46,7 @@ public class SimpleEngine {
     private LightBase ambientLight;
     private GPSCoord gpsCoord = new GPSCoord(2.333333, 48.866667);
     private GPSCoord gpsCoord2 = new GPSCoord(-74.00, 40.43);
-    private SphereCoordinates coords = new SphereCoordinates(gpsCoord);
-    private SphereCoordinates coords2 = new SphereCoordinates(gpsCoord2);
+    private GPSCoord getGpsCoord3 = new GPSCoord(3.5, 48.866667);
     
     private Box box;
     private StackPane stackPane;
@@ -58,12 +58,17 @@ public class SimpleEngine {
     
     private Pos3D pos;
     private Pos3D pos2;
+    private Pos3D pos3;
     private double dist;
     private Marker marker = new Marker(gpsCoord);
     private Marker marker2 = new Marker(gpsCoord2);
+    private Marker marker3 = new Marker(getGpsCoord3);
     private List<Marker> markers = new ArrayList<Marker>();
-
+    private CartographyTextureManager manager;
     private Scene scene;
+    private Group root;
+    private Group tile;
+    private Stage stage;
 
     public SimpleEngine(Scene scene) {
 
@@ -72,11 +77,12 @@ public class SimpleEngine {
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new TrackBallCamera(0, 0, -30, scene);
+        camera = new TrackBallCamera(0, 0, -30, scene, root, tile);
+
         
         skybox = setSkybox();
         earth = new Planet(DIFFUSE_MAP, SPECULAR_MAP, NORMAL_MAP, 6.371);
-
+        manager = new CartographyTextureManager(earth);
         // Set lights
         sunLight = new PointLight();
         ambientLight = new AmbientLight();
@@ -87,15 +93,19 @@ public class SimpleEngine {
         
         ambientLight.setColor(Color.color(0.4, 0.4, 0.4));
         ambientLight.setTranslateX(30);
-        ambientLight.setTranslateZ(30);
+        ambientLight.setTranslateZ(-30);
 
-        earth.init();
-        
-        pos = coords.get3DPosUsingDegrees(earth.getPlanetRadius());
-        pos2 = coords2.get3DPosUsingDegrees(earth.getPlanetRadius());
+        earth.initWithoutBumpMap();
+        camera.setPlanet(earth);
+
+        pos = gpsCoord.toPos3D(earth.getPlanetRadius());
+        pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
+        pos3 = getGpsCoord3.toPos3D(earth.getPlanetRadius());
         dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
-        System.out.println("Pos is : {" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "}");
-        System.out.println("Pos is : {" + pos2.getX() + ", " + pos2.getY() + ", " + pos2.getZ() + "}");
+        
+        System.out.println("Pos is : {" + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        System.out.println("Pos is : {" + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
+        
         System.out.println("Distance is : {" + dist + "}");  
     }
 
@@ -107,28 +117,42 @@ public class SimpleEngine {
         this.scene = scene;
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public SubScene getSubScene() {
         return subScene;
     }
 
     public Group initScene(){
-        Group root = new Group();
+        root = new Group();
+        tile = new Group();
         Group markerGroup = new Group();
+
+        root.getChildren().add(tile);
         root.getChildren().add(skybox);
         root.getChildren().add(sunLight);
         root.getChildren().add(ambientLight);
+
         earth.addToContainer(root);
         marker.render(markerGroup, earth.getPlanetRadius());
         marker2.render(markerGroup, earth.getPlanetRadius());
+        marker3.render(markerGroup, earth.getPlanetRadius());
+
         root.getChildren().add(markerGroup);
+
+        camera.setRoot(root);
         
         markers.add(marker);
         markers.add(marker2);
+        markers.add(marker3);
 
         subScene = new SubScene(root, 200, 200, true, BALANCED);
         subScene.setManaged(true);
         subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
+        
         Group group = new Group(subScene);
         camera.bindOn(group);
         
@@ -171,6 +195,44 @@ public class SimpleEngine {
 
     }
 
+    public void initCameraConfig(){
+        camera.setStackPane(stackPane);
+        camera.setCamera(camera);
+        camera.setStage(stage);
+        camera.setTile(tile);
+
+    }
+
+
+    private Box createPlane(String texturePath, Pos3D pos, double w, double h){
+        Box box = new Box(0.1, h, w);
+        PhongMaterial material = new PhongMaterial();
+
+        System.out.println("-------------- CUBE POS ---------------");
+        System.out.println("Cube Coord in 3D Pos :");
+        System.out.println("    -X : " + pos.getX());
+        System.out.println("    -Y : " + pos.getY());
+        System.out.println("    -Z : " + pos.getZ());
+        System.out.println();
+
+        box.setTranslateX(pos.getX());
+        box.setTranslateY(pos.getY());
+        box.setTranslateZ(-pos.getZ());
+
+        material.setDiffuseMap(
+                new Image(
+                        texturePath,
+                        256,
+                        256,
+                        true,
+                        true
+                )
+        );
+
+        box.setMaterial(material);
+
+        return box;
+    }
 
 
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="400.0" prefHeight="211.0" prefWidth="465.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.SetServerImageryController">
+   <children>
+      <VBox prefHeight="270.0" prefWidth="525.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="146.0" prefWidth="525.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.5" minWidth="10.0" prefWidth="83.5" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="344.0" minWidth="10.0" prefWidth="316.5" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="75.5" minHeight="0.0" prefHeight="8.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="196.0" minHeight="10.0" prefHeight="44.5" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="259.0" minHeight="6.5" prefHeight="59.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="259.0" minHeight="10.0" prefHeight="15.5" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TextField fx:id="serverURL" alignment="CENTER" promptText="%key.server.url" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="layer" alignment="CENTER" promptText="%key.layer" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+            <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="137.0" prefWidth="465.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.5" minWidth="10.0" prefWidth="58.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.5" minWidth="10.0" prefWidth="220.5" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="371.5" minWidth="10.0" prefWidth="236.5" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="47.5" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="37.5" minHeight="10.0" prefHeight="28.5" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleApplyButton" prefHeight="25.0" prefWidth="123.0" text="%key.apply" />
+                        <Pane prefHeight="42.0" prefWidth="13.0" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="25.0" prefWidth="113.0" text="%key.cancel" />
+                        <Pane prefHeight="29.0" prefWidth="12.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

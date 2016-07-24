@@ -1,5 +1,10 @@
 package com.jack.core;
 
+import com.jack.engine.EmpriseCoord;
+import com.jack.engine.GPSCoord;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+
 /**
  * Created by Maxime on 14/04/2016.
  */
@@ -107,7 +112,74 @@ public class JackMath {
         return EPSILON20;
     }
 
+    /**
+     *
+     * @param x
+     * @param z
+     * @param fov
+     * @param radius
+     * @param xAngle
+     * @param yAngle
+     * @return EmpriseCoord
+     */
+    public static EmpriseCoord xPosbyFov (double x, double z, double fov, double radius, double xAngle, double yAngle) {
 
+        double zAbs = Math.abs(z);
+        double res = fov > 1? 1 : 0.5;
+        double xPos = res * Math.tan(Math.toRadians(35)/ 2) * (Math.abs(zAbs - radius));
+        GPSCoord camCoord = new GPSCoord();
+        camCoord.setLongitude(-xAngle);
+        camCoord.setLatitude((-yAngle * 1.5));
+        double minX = camCoord.getLongitude() - xPos * 2;
+        double maxX = camCoord.getLongitude() + xPos * 2;
+
+        double minY = camCoord.getLatitude() - xPos * 2;
+        double maxY = camCoord.getLatitude() + xPos * 2;
+
+        double camPos = camCoord.getLongitude();
+
+        /*
+        System.out.println("Z " + z + " X : " + x);
+        System.out.println("Radius : " + radius);
+        System.out.println("X Cam : " + camPos + " || xMaxPos : " + maxX);
+        System.out.println("Emprise : " + minX + " " + minY + " " + maxX + " " + minY);
+        */
+
+        EmpriseCoord emprise = new EmpriseCoord(minX, minY, maxX, maxY);
+        return emprise;
+    }
+
+    public static EmpriseCoord[] splitEmprise(EmpriseCoord emprise, int x, int y){
+        EmpriseCoord[] tiledEmprise = new EmpriseCoord[x*y];
+
+        GPSCoord min = emprise.getMinCoord();
+        GPSCoord max = emprise.getMaxCoord();
+        double minLong = min.getLongitude();
+        double minLat = min.getLatitude();
+        double xCoordSize = max.getLongitude() - minLong;
+        double yCoordSize = max.getLatitude() - minLat;
+
+        double xToAdd = xCoordSize / (double)x;
+        double yToAdd = yCoordSize / (double)y;
+
+        int i = 0;
+        int j = 0;
+        int list = 0;
+
+        for (i = 0; i < x; i++){
+            double maxLong = minLong + xToAdd;
+            minLat = min.getLatitude();
+            for(j = 0; j < y; j++){
+                double maxLat = minLat + yToAdd;
+                tiledEmprise[list] = new EmpriseCoord(minLong, minLat, maxLong, maxLat);
+                minLat = maxLat;
+                list++;
+            }
+            minLong = maxLong;
+        }
+
+        return tiledEmprise;
+    }
 
 
 }
