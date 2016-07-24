@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HTTPRequestThread implements Runnable {
 
     protected volatile String uri;
-    protected volatile int id;
+    protected volatile String id;
 
-    public HTTPRequestThread(String uri, int id){
+    public HTTPRequestThread(String uri, String id){
         this.uri = uri;
         this.id = id;
 

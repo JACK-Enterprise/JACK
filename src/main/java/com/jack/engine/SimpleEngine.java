@@ -141,10 +141,6 @@ public class SimpleEngine {
         marker3.render(markerGroup, earth.getPlanetRadius());
 
         root.getChildren().add(markerGroup);
-        
-        Group textures = manager.bindTextures(scene, 0, 0, 0, 0);
-
-        root.getChildren().add(textures);
 
         camera.setRoot(root);
         

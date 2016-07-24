@@ -13,11 +13,12 @@ import java.net.URL;
  */
 public class HTTPRequest {
 
+
     protected volatile InputStream imgStream;
 
     public void openConnection(String uri){
         try {
-           URL url = new URL(uri);
+            URL url = new URL(uri);
             try {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");

@@ -14,6 +14,9 @@ import java.net.URL;
 
 import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
+import static java.lang.Math.PI;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 /**
@@ -27,12 +30,16 @@ public class WMSImageryProvider {
     private URL templateURL;
     private String getMapTemplate;
     private String getMapUri;
+    private LinkedList<Thread> threadList;
+    
+    private static final int THREAD_NUMBER_LIMIT = 25;
+    
     /***
      * Constructor to create a new WMS class
      * @param description
      */
     public WMSImageryProvider(Description description) {
-
+        threadList = new LinkedList<Thread>();
         description = defaultValue(description, new Description());
         if(!defined(description.url)) {
             DeveloperError error = new DeveloperError("Error: URL is required");
@@ -52,8 +59,8 @@ public class WMSImageryProvider {
                 "&styles={styles}" +
                 "&SRS=" +
                 "&bbox={northen, west, southern, east}" +
-                "&WIDTH=256" +
-                "&HEIGHTt=256" +
+                "&WIDTH={res}" +
+                "&HEIGHTt={res}" +
                 "&FORMAT={format}";
     }
 
@@ -64,6 +71,7 @@ public class WMSImageryProvider {
      */
     public WMSImageryProvider(String uri, String layers) {
 
+        threadList = new LinkedList<Thread>();
         this.serverURL = uri;
         this.layers = layers;
         this.defaultParameters = new DefaultParameters();
@@ -74,35 +82,73 @@ public class WMSImageryProvider {
                 "&LAYERS={layers}" +
                 "&SRS=EPSG:4326" +
                 "&BBOX={minX},{minY},{maxX},{maxY}" +
-                "&WIDTH=256" +
-                "&HEIGHT=256" +
+                "&WIDTH={res}" +
+                "&HEIGHT={res}" +
                 "&FORMAT=image/png";
 
     }
 
-    public void getTiledMap(EmpriseCoord emprise, int xDivision, int yDivision){
-        EmpriseCoord[] splitList = splitEmprise(emprise, xDivision, yDivision);
+    public void getTiledMap(EmpriseCoord emprise, double fov, double radius){
+        GPSCoord minCoord = emprise.getMinCoord();
+        GPSCoord maxCoord = emprise.getMaxCoord();
+        double stepX = 2;
+        double stepY = 2;
+        double minLg = Math.floor(minCoord.getLongitude() / stepX) * stepX;
+        double minLat = Math.floor(minCoord.getLatitude() / stepY) * stepY;
+        double maxLg = Math.ceil(maxCoord.getLongitude() / stepX) * stepX;
+        double maxLat = Math.ceil(maxCoord.getLatitude() / stepY) * stepY;
+        double w = 2 * PI * radius / 360;
+        double h = 2 * PI * radius / 360;
+        double nextI;
+        double nextJ;
+        int res = fov > 40 ? 256 : (fov > 20 ? 512 : (fov > 10 ? 1024 : 2048));
 
-        int list = 0;
-
-        for(int i = 0; i < xDivision; i++){
-            for(int j = 0; j < yDivision; j++){
-                EmpriseCoord smallTile = splitList[list];
+        for(double i = minLg ; i < maxLg ; i+=stepX)
+        {
+            nextI = i+1;
+            
+            if(nextI >= 180)
+            {
+                nextI -= 360;
+            }
+            else if(nextI <= -180)
+            {
+                nextI += 360;
+            }
+            for(double j = minLat ; j < maxLat ; j+=stepY)
+            {
                 try{
-                    getMap(smallTile, list);
+                    
+                    nextJ = j+1;
+                    if(nextJ > 90)
+                    {
+                        nextJ = 89;
+                    }
+                    else if(nextJ < -90)
+                    {
+                        nextJ = -89;
+                    }
+
+                    
+                    EmpriseCoord tmp = new EmpriseCoord(i, j, nextI, nextJ);
+                    updateUri(i, j, nextI, nextJ, res);
+                    File f = new File("file:./tmp/" + i + "_" + j + "_" + res + ".png");
+                    if(!f.exists())
+                    {
+                        getMap(tmp, i + "_" + j + "_" + res, res);
+                    }
+                    
                 }
                 catch (IOException e){
                     System.out.println("Error when getting map: " + e.getMessage());
                 }
-                list++;
-
             }
         }
     }
 
-    public void getMap(EmpriseCoord emprise) throws MalformedURLException, IOException{
+    public void getMap(EmpriseCoord emprise, int res) throws MalformedURLException, IOException{
 
-        updateUri(emprise);
+        updateUri(emprise, res);
         String folderPath = "./tmp";
         File file = new File(folderPath + "/wms.png");
 
@@ -112,7 +158,6 @@ public class WMSImageryProvider {
         connection.setRequestMethod("GET");
         InputStream imgStream = connection.getInputStream();
 
-        //On crée le ficher dans le système de fichiers du système hôte
         if(!new File(folderPath).exists()) {
             new File(folderPath).mkdirs();
         }
@@ -124,25 +169,30 @@ public class WMSImageryProvider {
         int bytesRead = -1;
         byte[] buffer = new byte[4096];
 
-        //Chaque byte lut en provenance du serveur Web est écrit dans le fichier
         while((bytesRead = imgStream.read(buffer)) != -1)
             output.write(buffer, 0, bytesRead);
 
-        //On ferme les flux
         imgStream.close();
         output.close();
 
     }
 
-    public void getMap(EmpriseCoord emprise, int id) throws MalformedURLException, IOException{
+    public void getMap(EmpriseCoord emprise, String id, int res) throws MalformedURLException, IOException{
 
-        updateUri(emprise);
+        updateUri(emprise, res);
         String folderPath = "./tmp";
-        
-        HTTPRequestThread httpRequestThread = new HTTPRequestThread(getMapUri, id);
-        Thread thread = new Thread(httpRequestThread);
-        thread.start();
 
+
+        if(threadList.size() > THREAD_NUMBER_LIMIT)
+        {
+            Thread first = threadList.removeFirst();
+        }
+        
+        HTTPRequestThread request = new HTTPRequestThread(getMapUri, id);
+        Thread thread = new Thread(request);
+
+        thread.start();
+        threadList.add(thread);
     }
 
     private void buildGetMapUri(){
@@ -151,28 +201,26 @@ public class WMSImageryProvider {
         getMapUri = getMapUri.replace("{layers}", layers);
     }
 
-    private void updateUri(int minX, int minY, int maxX, int maxY){
+    private void updateUri(int minX, int minY, int maxX, int maxY, int res){
         buildGetMapUri();
         getMapUri = getMapUri.replace("{minX}", ""+minX);
         getMapUri = getMapUri.replace("{minY}", ""+minY);
         getMapUri = getMapUri.replace("{maxX}", ""+maxX);
         getMapUri = getMapUri.replace("{maxY}", ""+maxY);
-
-        System.out.println(getMapUri);
+        getMapUri = getMapUri.replace("{res}", ""+res);
 
     }
     
-    private void updateUri(double minX, double minY, double maxX, double maxY){
+    private void updateUri(double minX, double minY, double maxX, double maxY, int res){
         buildGetMapUri();
         getMapUri = getMapUri.replace("{minX}", ""+minX);
         getMapUri = getMapUri.replace("{minY}", ""+minY);
         getMapUri = getMapUri.replace("{maxX}", ""+maxX);
         getMapUri = getMapUri.replace("{maxY}", ""+maxY);
-
-        System.out.println(getMapUri);
+        getMapUri = getMapUri.replace("{res}", ""+res);
     }
 
-    private void updateUri(EmpriseCoord emprise){
+    private void updateUri(EmpriseCoord emprise, int res){
         GPSCoord minCoord = emprise.getMinCoord();
         GPSCoord maxCoord = emprise.getMaxCoord();
 
@@ -181,8 +229,7 @@ public class WMSImageryProvider {
         getMapUri = getMapUri.replace("{minY}", ""+minCoord.getLatitude());
         getMapUri = getMapUri.replace("{maxX}", ""+maxCoord.getLongitude());
         getMapUri = getMapUri.replace("{maxY}", ""+maxCoord.getLatitude());
-
-        System.out.println(getMapUri);
+        getMapUri = getMapUri.replace("{res}", ""+res);
     }
 
 }

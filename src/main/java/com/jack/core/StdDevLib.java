@@ -55,7 +55,6 @@ public class StdDevLib {
                 }
                 reader.close();
 
-                System.out.println(Arrays.toString(data));
             }
             catch (IOException e){
                 System.out.println("Error when reading the file: " + e.getMessage());
