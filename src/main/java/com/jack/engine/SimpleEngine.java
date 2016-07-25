@@ -2,8 +2,12 @@ package com.jack.engine;
 
 
 
+import com.jack.annotationparser.AnnotationFunctionBinder;
 import com.jack.engine.camera.TrackBallCamera;
 import com.jack.engine.render.Marker;
+import com.jack.plugins.manager.Plugin;
+import com.jack.plugins.manager.PluginLoader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
@@ -44,9 +48,6 @@ public class SimpleEngine {
     private Skybox skybox;
     private LightBase sunLight;
     private LightBase ambientLight;
-    private GPSCoord gpsCoord = new GPSCoord(2.333333, 48.866667);
-    private GPSCoord gpsCoord2 = new GPSCoord(-74.00, 40.43);
-    private GPSCoord getGpsCoord3 = new GPSCoord(3.5, 48.866667);
     
     private Box box;
     private StackPane stackPane;
@@ -60,15 +61,12 @@ public class SimpleEngine {
     private Pos3D pos2;
     private Pos3D pos3;
     private double dist;
-    private Marker marker = new Marker(gpsCoord);
-    private Marker marker2 = new Marker(gpsCoord2);
-    private Marker marker3 = new Marker(getGpsCoord3);
-    private List<Marker> markers = new ArrayList<Marker>();
     private CartographyTextureManager manager;
     private Scene scene;
     private Group root;
     private Group tile;
     private Stage stage;
+    private ArrayList<Plugin> plugins;
 
     public SimpleEngine(Scene scene) {
 
@@ -77,7 +75,8 @@ public class SimpleEngine {
         angleY = 0;
         motionSensitivity = 0.003;
 
-        camera = new TrackBallCamera(0, 0, -30, scene, root, tile);
+        plugins = new ArrayList<Plugin>();
+        camera = new TrackBallCamera(0, 0, -30, scene, root, tile, plugins);
 
         
         skybox = setSkybox();
@@ -98,15 +97,22 @@ public class SimpleEngine {
         earth.initWithoutBumpMap();
         camera.setPlanet(earth);
 
-        pos = gpsCoord.toPos3D(earth.getPlanetRadius());
-        pos2 = gpsCoord2.toPos3D(earth.getPlanetRadius());
-        pos3 = getGpsCoord3.toPos3D(earth.getPlanetRadius());
-        dist = gpsCoord.getSphericalDistance(gpsCoord2, earth.getPlanetRadius()) * 1000;
+        File folder = new File("plugins");
+        ArrayList<Plugin> tmpPlugins;
         
-        System.out.println("Pos is : {" + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
-        System.out.println("Pos is : {" + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLongitude() + ", " + gpsCoord2.toPos3D(earth.getPlanetRadius()).toGPSCoord().getLatitude() + "}");
-        
-        System.out.println("Distance is : {" + dist + "}");  
+        if(folder.exists()) {
+            File[] files = folder.listFiles();
+            if(files!=null) {
+                for(File f: files) {
+                    tmpPlugins = (new PluginLoader(f.getPath(), new ArrayList<AnnotationFunctionBinder>())).load();
+                    if(tmpPlugins != null)
+                    {
+                        plugins.addAll(tmpPlugins);
+                    }
+                }
+            }
+            folder.delete();
+        }
     }
 
     public void setStackPane(StackPane stackPane) {
@@ -136,17 +142,10 @@ public class SimpleEngine {
         root.getChildren().add(ambientLight);
 
         earth.addToContainer(root);
-        marker.render(markerGroup, earth.getPlanetRadius());
-        marker2.render(markerGroup, earth.getPlanetRadius());
-        marker3.render(markerGroup, earth.getPlanetRadius());
 
         root.getChildren().add(markerGroup);
 
         camera.setRoot(root);
-        
-        markers.add(marker);
-        markers.add(marker2);
-        markers.add(marker3);
 
         subScene = new SubScene(root, 200, 200, true, BALANCED);
         subScene.setManaged(true);
@@ -155,25 +154,9 @@ public class SimpleEngine {
         
         Group group = new Group(subScene);
         camera.bindOn(group);
-        
-        subScene.setOnScroll(bindScrollMouseEvent());
 
         return group;
 
-    }
-    
-    private EventHandler <ScrollEvent> bindScrollMouseEvent(){
-        return new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-
-                for(Marker markerNode : markers)
-                {
-                    markerNode.scale(camera.getFov() / camera.getStartFov());
-                }
-            }
-        };
-        
     }
 
     public void setSize(){

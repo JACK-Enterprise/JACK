@@ -85,8 +85,8 @@ public class PluginLoader {
                         if(tmpClass != null) {
                             classes.add(tmpClass);
                         }
-                    } catch(ClassNotFoundException | java.lang.IncompatibleClassChangeError e) {
-                        log.warn("Class " + tmp + "could not be loaded !");
+                    } catch(ClassNotFoundException | java.lang.IncompatibleClassChangeError | java.lang.NoClassDefFoundError e) {
+                        //log.warn("Class " + tmp + "could not be loaded !");
                     }
                 }
             }

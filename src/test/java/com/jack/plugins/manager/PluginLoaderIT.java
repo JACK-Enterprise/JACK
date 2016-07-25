@@ -14,6 +14,7 @@ import org.junit.Test;
 /**
  *
  * @author Aurelien
+ * 
  */
 public class PluginLoaderIT {
     

@@ -5,6 +5,7 @@
  */
 package com.jack.engine.camera;
 
+import com.jack.annotations.RenderGPS;
 import com.jack.configuration.IniManager;
 import com.jack.engine.CartographyTextureManager;
 import com.jack.engine.EmpriseCoord;
@@ -12,6 +13,7 @@ import com.jack.engine.GPSCoord;
 import com.jack.engine.Planet;
 import static  com.jack.core.JackMath.*;
 import static com.jack.core.StdDevLib.*;
+import com.jack.plugins.manager.Plugin;
 import com.jack.wms.WMSImageryProvider;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
@@ -30,6 +32,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import javafx.scene.input.MouseButton;
 
 /**
  *
@@ -40,6 +44,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter @Setter private double x;
     @Getter @Setter private double y;
     @Getter @Setter private double z;
+    private ArrayList<Plugin> plugins;
     private double zInit;
     private Scene scene;
     private double lastMouseX;
@@ -59,7 +64,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Setter private TrackBallCamera camera;
     private CartographyTextureManager manager;
 
-    public TrackBallCamera(double x, double y, double z, Scene scene, Group root) {
+    public TrackBallCamera(double x, double y, double z, Scene scene, Group root, ArrayList<Plugin> plugins) {
         super(true);
         this.x = x;
         this.y = y;
@@ -75,6 +80,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         String url = iniManager.getStringValue("imagery", "server");
         String layer = iniManager.getStringValue("imagery", "layers");
         wms = new WMSImageryProvider(url, layer);
+        this.plugins = plugins;
         
         setFieldOfView(fov);
         setFarClip(10000);
@@ -87,7 +93,7 @@ public class TrackBallCamera extends PerspectiveCamera {
 
     }
 
-    public TrackBallCamera(double x, double y, double z, Scene scene, Group root, Group tile) {
+    public TrackBallCamera(double x, double y, double z, Scene scene, Group root, Group tile, ArrayList<Plugin> plugins) {
         super(true);
         this.x = x;
         this.y = y;
@@ -97,6 +103,7 @@ public class TrackBallCamera extends PerspectiveCamera {
         this.scene = scene;
         this.root = root;
         this.tile = tile;
+        this.plugins = plugins;
         moveSensitivity = 0.4;
         zoomSensitivity = 0.003;
         IniManager iniManager = new IniManager();
@@ -199,9 +206,29 @@ public class TrackBallCamera extends PerspectiveCamera {
         return new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
-                lastMouseX = event.getScreenX();
-                lastMouseY = event.getScreenY();
+                
+                if(event.getButton() == MouseButton.PRIMARY)
+                {
+                    scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+                    lastMouseX = event.getScreenX();
+                    lastMouseY = event.getScreenY();
+                }
+                
+                else if(event.getButton() == MouseButton.SECONDARY)
+                {
+                    double mx = event.getScreenX();
+                    double my = event.getScreenY();
+                    GPSCoord coord = new GPSCoord(-totalXAngle, -totalYAngle * 1.5);
+                    
+                    for(Plugin plugin : plugins)
+                    {
+                        if(plugin.getClass().getAnnotation(RenderGPS.class) != null)
+                        {
+                            plugin.run(coord, root, planet.getRadius() + 1);
+                        }
+                    }
+                }
+                
             }
         };
     }
