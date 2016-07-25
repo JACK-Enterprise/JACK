@@ -8,7 +8,7 @@ JACK The Java cartographic app !
 
 <h1>Description</h1>
  
-  JAVA Advanced Cartography Kernel is a geo referenced 3D 
+  JAVA Advanced Cartographic Kernel is a geo referenced 3D 
   cartography application which has been built in order to 
   provide a simple and customizable library for Java developpers 
   who wants to work with a cartography API without any knowledges 
