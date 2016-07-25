@@ -207,25 +207,20 @@ public class TrackBallCamera extends PerspectiveCamera {
             @Override
             public void handle(MouseEvent event) {
                 
-                if(event.getButton() == MouseButton.PRIMARY)
-                {
-                    scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
-                    lastMouseX = event.getScreenX();
-                    lastMouseY = event.getScreenY();
-                }
+                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+                lastMouseX = event.getScreenX();
+                lastMouseY = event.getScreenY();
+                double mx = event.getScreenX();
+                double my = event.getScreenY();
+                GPSCoord coord = new GPSCoord(-totalXAngle, -totalYAngle * 1.5);
                 
-                else if(event.getButton() == MouseButton.SECONDARY)
+                System.out.println("SIZE : " + plugins.size());
+                for(Plugin plugin : plugins)
                 {
-                    double mx = event.getScreenX();
-                    double my = event.getScreenY();
-                    GPSCoord coord = new GPSCoord(-totalXAngle, -totalYAngle * 1.5);
-                    
-                    for(Plugin plugin : plugins)
+                    System.out.println(plugin.getClass().toString());
+                    if(plugin.getClass().getAnnotation(RenderGPS.class) != null)
                     {
-                        if(plugin.getClass().getAnnotation(RenderGPS.class) != null)
-                        {
-                            plugin.run(coord, root, planet.getRadius() + 1);
-                        }
+                        plugin.run(coord, root, planet.getRadius() + 1);
                     }
                 }
                 

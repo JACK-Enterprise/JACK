@@ -14,6 +14,7 @@ import java.util.Enumeration;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,14 +28,24 @@ public class JarLoader {
     private static final String FILE_NOT_FOUND_MESSAGE = "Could not find file";
     private static URLClassLoader loader = null;
     
-    private String path;
+    @Getter private String path;
     
     public JarLoader(String path) {
         this.path = path;
     }
     
+    public URL getURL() {
+        return getURL(new File(this.path));
+    }
+    
     public URL getURL(File file) {
         URL url;
+        if(file == null)
+        {
+            final String message = MALFORMED_URL_MESSAGE + " \"" + this.path + "\"";
+            log.warn(message);
+            throw new IllegalArgumentException(message);
+        }
         try {
             url = file.toURL();
         } catch (MalformedURLException e) {
@@ -81,6 +92,7 @@ public class JarLoader {
          public Void run() {
              
             loader = new URLClassLoader(new URL[] {url});
+            
             return null;
          }
      });

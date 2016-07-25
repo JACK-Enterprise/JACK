@@ -75,7 +75,24 @@ public class SimpleEngine {
         angleY = 0;
         motionSensitivity = 0.003;
 
-        plugins = new ArrayList<Plugin>();
+        plugins = new ArrayList<Plugin>();        
+        ArrayList<Plugin> tmpPlugins;
+        File folder = new File("plugins");
+        
+        if(folder.exists()) {
+            File[] files = folder.listFiles();
+            if(files!=null) {
+                for(File f: files) {
+                    tmpPlugins = (new PluginLoader(f.getPath(), new ArrayList<AnnotationFunctionBinder>())).load();
+                    System.out.println("GOT : " + tmpPlugins);
+                    if(tmpPlugins != null)
+                    {
+                        System.out.println("GOT elems : " + tmpPlugins.size());
+                        plugins.addAll(tmpPlugins);
+                    }
+                }
+            }
+        }
         camera = new TrackBallCamera(0, 0, -30, scene, root, tile, plugins);
 
         
@@ -96,23 +113,6 @@ public class SimpleEngine {
 
         earth.initWithoutBumpMap();
         camera.setPlanet(earth);
-
-        File folder = new File("plugins");
-        ArrayList<Plugin> tmpPlugins;
-        
-        if(folder.exists()) {
-            File[] files = folder.listFiles();
-            if(files!=null) {
-                for(File f: files) {
-                    tmpPlugins = (new PluginLoader(f.getPath(), new ArrayList<AnnotationFunctionBinder>())).load();
-                    if(tmpPlugins != null)
-                    {
-                        plugins.addAll(tmpPlugins);
-                    }
-                }
-            }
-            folder.delete();
-        }
     }
 
     public void setStackPane(StackPane stackPane) {

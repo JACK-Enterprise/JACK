@@ -7,6 +7,7 @@ import com.jack.annotationparser.AnnotationParser;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -40,12 +41,14 @@ public class PluginLoader {
             classes.stream().forEach((Class object) -> {
                 Class c = (Class) object;
                 PluginDescription description = getDescription(c);
-                
+                System.out.println("Streaming " + c);
                 if(description != null)
                 {
+                    System.out.println("descr " + description);
                     parseAnnotations(c);
                     if(PluginBase.class.isAssignableFrom(c))
                     {
+                        System.out.println("Assignable from PluginBase " + c);
                         try {
                             PluginBase base = (PluginBase) c.newInstance();
                             plugins.add(new Plugin(base, description));
@@ -70,6 +73,10 @@ public class PluginLoader {
                 return null;
             }
             URLClassLoader classLoader = loader.getClassLoader();
+            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+            CustomClassLoader l = new CustomClassLoader(sysloader.getURLs());
+            l.addURL(loader.getURL());
+            
             ArrayList<Class> classes = new ArrayList<Class>();
             
             while(enumeration.hasMoreElements()){
@@ -81,12 +88,13 @@ public class PluginLoader {
                     tmp = tmp.substring(0,tmp.length()-6);
                     tmp = tmp.replaceAll("/",".");
                     try {
-                        Class tmpClass = Class.forName(tmp ,true,classLoader);
+                        Class tmpClass = classLoader.loadClass(tmp);
+                        System.out.println(tmpClass);
                         if(tmpClass != null) {
                             classes.add(tmpClass);
                         }
                     } catch(ClassNotFoundException | java.lang.IncompatibleClassChangeError | java.lang.NoClassDefFoundError e) {
-                        //log.warn("Class " + tmp + "could not be loaded !");
+                        log.warn("Class " + tmp + " could not be loaded !");
                     }
                 }
             }
