@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#handleClick" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.AboutController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#handleClick" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.AboutController">
    <children>
       <ImageView fitHeight="137.0" fitWidth="200.0" layoutX="400.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Logo.png" />
          </image>
       </ImageView>
-      <Label layoutX="26.0" layoutY="161.0" prefHeight="36.0" prefWidth="310.0" text="Jack Version 1.0">
+      <Label layoutX="26.0" layoutY="161.0" prefHeight="36.0" prefWidth="310.0" text="Jack Version 1.2">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>

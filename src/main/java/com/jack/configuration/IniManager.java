@@ -53,7 +53,7 @@ public class IniManager {
                     "\n#Last modified " + now.toString() + " by System:JACK:App");
 
             ini.put("user", "lang", "en-US");
-            ini.put("data", "version", 1.0);
+            ini.put("data", "version", 1.2);
             ini.put("data", "site", "https://github.com/JACK-Enterprise/JACK");
             ini.put("imagery", "type", "WMS");
             ini.put("imagery", "server", "http://geoservices.brgm.fr/geologie");
