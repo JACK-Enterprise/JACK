@@ -258,11 +258,6 @@ public class MainApp extends Application {
     }
 
     public void cancelRequest(){
-        try {
-            ini.stopWatching();
-        }
-        catch (InterruptedException e){
-
-        }
+        Platform.exit();
    }
 }
