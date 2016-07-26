@@ -82,10 +82,10 @@ public class CartographyTextureManager {
                     GPSCoord nextCoordJ = new GPSCoord(i, nextJ);
                     GPSCoord nextCoordIJ = new GPSCoord(nextI, nextJ);
 
-                    MeshView box = createPlane(x, y, filename,nextCoordJ.toPos3D(planet.getRadius() + 1),
-                                                coordTmp.toPos3D(planet.getRadius() + 1),
-                                                nextCoordIJ.toPos3D(planet.getRadius() + 1),
-                                                nextCoordI.toPos3D(planet.getRadius() + 1), res, planet.getRadius());
+                    MeshView box = createPlane(x, y, filename,nextCoordJ.toPos3D(planet.getRadius()),
+                                                coordTmp.toPos3D(planet.getRadius()),
+                                                nextCoordIJ.toPos3D(planet.getRadius()),
+                                                nextCoordI.toPos3D(planet.getRadius()), res, planet.getRadius());
 
                     boxes.add(box);
                     tmpMap.put(filename, box);

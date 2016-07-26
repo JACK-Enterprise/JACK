@@ -4,13 +4,10 @@ package com.jack.engine;
 
 import com.jack.annotationparser.AnnotationFunctionBinder;
 import com.jack.engine.camera.TrackBallCamera;
-import com.jack.engine.render.Marker;
 import com.jack.plugins.manager.Plugin;
 import com.jack.plugins.manager.PluginLoader;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
@@ -19,7 +16,6 @@ import static javafx.scene.SceneAntialiasing.BALANCED;
 import javafx.scene.SubScene;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -77,17 +73,15 @@ public class SimpleEngine {
 
         plugins = new ArrayList<Plugin>();        
         ArrayList<Plugin> tmpPlugins;
-        File folder = new File("plugins");
+        File folder = new File("plugins");        
         
         if(folder.exists()) {
             File[] files = folder.listFiles();
             if(files!=null) {
                 for(File f: files) {
                     tmpPlugins = (new PluginLoader(f.getPath(), new ArrayList<AnnotationFunctionBinder>())).load();
-                    System.out.println("GOT : " + tmpPlugins);
                     if(tmpPlugins != null)
                     {
-                        System.out.println("GOT elems : " + tmpPlugins.size());
                         plugins.addAll(tmpPlugins);
                     }
                 }

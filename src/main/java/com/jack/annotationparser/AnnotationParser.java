@@ -118,7 +118,12 @@ public class AnnotationParser {
         
         if(target != null)
         {
-            Field[] fields = target.getDeclaredFields();
+            Field[] fields = new Field[0];
+            try {
+                    fields = target.getDeclaredFields();
+            } catch(java.lang.IncompatibleClassChangeError | java.lang.NoClassDefFoundError e) {
+                        log.warn("Class could not be loaded !");
+                    }
             for(Field field : fields) {
                 output.add(new AnnotationBinder(field, getClassFieldAnnotations(field)));
             }

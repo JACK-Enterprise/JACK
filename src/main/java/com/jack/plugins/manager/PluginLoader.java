@@ -41,14 +41,11 @@ public class PluginLoader {
             classes.stream().forEach((Class object) -> {
                 Class c = (Class) object;
                 PluginDescription description = getDescription(c);
-                System.out.println("Streaming " + c);
                 if(description != null)
                 {
-                    System.out.println("descr " + description);
                     parseAnnotations(c);
                     if(PluginBase.class.isAssignableFrom(c))
                     {
-                        System.out.println("Assignable from PluginBase " + c);
                         try {
                             PluginBase base = (PluginBase) c.newInstance();
                             plugins.add(new Plugin(base, description));
@@ -73,9 +70,7 @@ public class PluginLoader {
                 return null;
             }
             URLClassLoader classLoader = loader.getClassLoader();
-            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-            CustomClassLoader l = new CustomClassLoader(sysloader.getURLs());
-            l.addURL(loader.getURL());
+            CustomClassLoader.addURL(loader.getURL());
             
             ArrayList<Class> classes = new ArrayList<Class>();
             
@@ -88,8 +83,7 @@ public class PluginLoader {
                     tmp = tmp.substring(0,tmp.length()-6);
                     tmp = tmp.replaceAll("/",".");
                     try {
-                        Class tmpClass = classLoader.loadClass(tmp);
-                        System.out.println(tmpClass);
+                        Class tmpClass = ClassLoader.getSystemClassLoader().loadClass(tmp);
                         if(tmpClass != null) {
                             classes.add(tmpClass);
                         }

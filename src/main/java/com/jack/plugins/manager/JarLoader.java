@@ -90,14 +90,12 @@ public class JarLoader {
         
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
          public Void run() {
-             
+             System.out.println(url);
             loader = new URLClassLoader(new URL[] {url});
             
             return null;
          }
      });
-        URLClassLoader classLoader = loader; 
-        
-        return classLoader;
+        return loader;
     }
 }

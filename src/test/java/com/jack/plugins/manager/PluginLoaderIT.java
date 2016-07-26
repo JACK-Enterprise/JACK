@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class PluginLoaderIT {
     
-    private static String PLUGIN_PATH = "src/test/resources/testPlugin.jar";
+    private static String PLUGIN_PATH = PluginLoader.class.getResource("/testPlugin.jar").getPath();
     private static int NB_PLUGINS = 1;
     @Test
     public void shouldParsePlugin() throws Exception {

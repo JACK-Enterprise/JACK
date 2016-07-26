@@ -13,6 +13,7 @@ import com.jack.engine.GPSCoord;
 import com.jack.engine.Planet;
 import static  com.jack.core.JackMath.*;
 import static com.jack.core.StdDevLib.*;
+import com.jack.engine.Pos3D;
 import com.jack.plugins.manager.Plugin;
 import com.jack.wms.WMSImageryProvider;
 import javafx.event.EventHandler;
@@ -162,6 +163,11 @@ public class TrackBallCamera extends PerspectiveCamera {
         EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                
+                if(event.getButton() != MouseButton.PRIMARY)
+                {
+                    return;
+                }
                 scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
                 double mouseX = event.getScreenX();
                 double mouseY = event.getScreenY();
@@ -206,28 +212,46 @@ public class TrackBallCamera extends PerspectiveCamera {
         return new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                
-                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
-                lastMouseX = event.getScreenX();
-                lastMouseY = event.getScreenY();
                 double mx = event.getScreenX();
                 double my = event.getScreenY();
-                GPSCoord coord = new GPSCoord(-totalXAngle, -totalYAngle * 1.5);
-                
-                System.out.println("SIZE : " + plugins.size());
-                for(Plugin plugin : plugins)
+                if(event.getButton() == MouseButton.PRIMARY)
                 {
-                    System.out.println(plugin.getClass().toString());
-                    if(plugin.getClass().getAnnotation(RenderGPS.class) != null)
-                    {
-                        plugin.run(coord, root, planet.getRadius() + 1);
-                    }
+                    scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+                    lastMouseX = mx;
+                    lastMouseY = my;
                 }
                 
-            }
+                else if(event.getButton() == MouseButton.SECONDARY)
+                {
+                    planet.setOnMousePressed(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getButton() != MouseButton.SECONDARY)
+                            {
+                                return;
+                            }
+                            double xTmp = event.getX();
+                            double yTmp = event.getY();
+                            double zTmp = event.getZ();
+                            GPSCoord coord = new Pos3D(-xTmp, yTmp, zTmp).toGPSCoord();
+                            GPSCoord coordCam = new Pos3D(x, y, z).toGPSCoord();
+                            
+                            coord.setLongitude(-coordCam.getLongitude() + coord.getLongitude());
+                            coord.setLatitude(-coordCam.getLatitude() + coord.getLatitude());
+
+                            for(Plugin plugin : plugins)
+                            {
+                                if(plugin.getPlugin().getClass().getAnnotation(RenderGPS.class) != null)
+                                {
+                                    plugin.run(coord, root, planet.getRadius());
+                                }
+                            }
+                        }
+                    });                
+                }
+            };
         };
     }
-
     private EventHandler <ScrollEvent> bindScrollMouseEvent(){
         return new EventHandler<ScrollEvent>() {
             @Override

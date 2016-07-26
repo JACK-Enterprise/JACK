@@ -9,6 +9,8 @@ import com.jack.address.controller.*;
 import com.jack.configuration.IniManager;
 import com.jack.engine.SimpleEngine;
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

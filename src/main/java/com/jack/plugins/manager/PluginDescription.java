@@ -18,4 +18,8 @@ public class PluginDescription {
     @Getter private String version;
     @Getter private String name;
     @Getter private String description;
+    
+    public String toString() {
+        return "{\"author\":\"" + author + "\", \"version\":\"" + version + "\", \"name\":\"" + name + "\", \"description\":\"" + description + "\"}";
+    }
 }

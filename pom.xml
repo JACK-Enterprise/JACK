@@ -107,7 +107,6 @@
 				<artifactId>jcabi-aspects</artifactId>
 				<version>${jcabi.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -210,6 +209,9 @@
 							<manifest>
 								<mainClass>com.jack.address.MainApp</mainClass>
 							</manifest>
+                                                        <manifestEntries>
+                                                            <Class-Path>../plugins/</Class-Path>
+                                                        </manifestEntries>
 						</archive>
 						<descriptorRefs>
 							<descriptorRef>jar-with-dependencies</descriptorRef>
