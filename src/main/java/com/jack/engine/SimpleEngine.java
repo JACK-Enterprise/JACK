@@ -185,12 +185,12 @@ public class SimpleEngine {
         Box box = new Box(0.1, h, w);
         PhongMaterial material = new PhongMaterial();
 
-        System.out.println("-------------- CUBE POS ---------------");
-        System.out.println("Cube Coord in 3D Pos :");
-        System.out.println("    -X : " + pos.getX());
-        System.out.println("    -Y : " + pos.getY());
-        System.out.println("    -Z : " + pos.getZ());
-        System.out.println();
+//        System.out.println("-------------- CUBE POS ---------------");
+//        System.out.println("Cube Coord in 3D Pos :");
+//        System.out.println("    -X : " + pos.getX());
+//        System.out.println("    -Y : " + pos.getY());
+//        System.out.println("    -Z : " + pos.getZ());
+//        System.out.println();
 
         box.setTranslateX(pos.getX());
         box.setTranslateY(pos.getY());

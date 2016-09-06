@@ -160,7 +160,8 @@ public class Skybox extends Group{
                 break;
         }
     }
-    /**     * this will layout the viewports to this style pattern
+    /**     
+     * this will layout the viewports to this style pattern
      *              ____
      *             |top |
      *         ____|____|____ ____

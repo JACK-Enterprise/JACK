@@ -30,7 +30,7 @@ public class IniManager {
             }
             catch (IOException e){
                 console.append("Error when creating new configuration file: ").append(e.getMessage()).append("\n");
-                System.out.println("Error when creating new configuration file: " + e.getMessage());
+//                System.out.println("Error when creating new configuration file: " + e.getMessage());
             }
         }
 
@@ -40,7 +40,7 @@ public class IniManager {
                 ini = new Wini(new File(iniPath));
             } catch (IOException e) {
                 console.append("Error when opening the configuration file: ").append(e.getMessage()).append("\n");
-                System.out.println("Error when opening the configuration file: " + e.getMessage());
+//                System.out.println("Error when opening the configuration file: " + e.getMessage());
             }
         }
         console.append("fichier chargé\n");
@@ -73,7 +73,7 @@ public class IniManager {
 
         }
         catch (IOException e){
-            System.out.println("Error when reading the configuration file: " + e.getMessage());
+//            System.out.println("Error when reading the configuration file: " + e.getMessage());
         }
     }
 

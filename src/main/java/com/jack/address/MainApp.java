@@ -55,15 +55,7 @@ public class MainApp extends Application {
        // ini.watchModification();
 
         initRootLayout();
-/*
-        WMSImageryProvider wms = new WMSImageryProvider("http://geoservices.brgm.fr/geologie", "SCAN_F_GEOL250");
-        try {
-            wms.getMap();
-        }
-        catch (IOException e){
 
-        }
-        */
     }
 
     /**
@@ -79,7 +71,6 @@ public class MainApp extends Application {
             loader.setResources(messages);
             loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
@@ -257,6 +248,10 @@ public class MainApp extends Application {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public IniManager getIni() {
+        return ini;
     }
 
     public void cancelRequest(){

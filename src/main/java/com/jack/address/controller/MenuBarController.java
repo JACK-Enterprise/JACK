@@ -74,7 +74,6 @@ public class MenuBarController {
         new Thread( () -> {
             initializeConsole(console);
         } ).start();
-        
     }
     
     public void refreshCoordinates() {

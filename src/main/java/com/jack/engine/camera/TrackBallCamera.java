@@ -22,7 +22,6 @@ import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
@@ -34,7 +33,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.scene.input.MouseButton;
+import javafx.scene.transform.Transform;
 
 /**
  *
@@ -45,7 +48,7 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter @Setter private double x;
     @Getter @Setter private double y;
     @Getter @Setter private double z;
-    private ArrayList<Plugin> plugins;
+    private final ArrayList<Plugin> plugins;
     private double zInit;
     private Scene scene;
     private double lastMouseX;
@@ -53,15 +56,15 @@ public class TrackBallCamera extends PerspectiveCamera {
     @Getter private double totalXAngle;
     @Getter private double totalYAngle;
     @Getter @Setter private double fov;
-    @Getter private double startFov;
-    private double zoomSensitivity;
+    @Getter private final double startFov;
+    private final double zoomSensitivity;
     private double moveSensitivity;
     private Planet planet;
     private Group root;
     private Group tile;
     private StackPane stackPane;
     private Stage stage;
-    private WMSImageryProvider wms;
+    private final WMSImageryProvider wms;
     @Setter private TrackBallCamera camera;
     private CartographyTextureManager manager;
 
@@ -91,7 +94,6 @@ public class TrackBallCamera extends PerspectiveCamera {
                 new Rotate(0, Rotate.X_AXIS),
                 new Translate(x, y, z));
 
-
     }
 
     public TrackBallCamera(double x, double y, double z, Scene scene, Group root, Group tile, ArrayList<Plugin> plugins) {
@@ -119,8 +121,6 @@ public class TrackBallCamera extends PerspectiveCamera {
                 new Rotate(0, Rotate.Y_AXIS),
                 new Rotate(0, Rotate.X_AXIS),
                 new Translate(x, y, z));
-
-
     }
 
     public void setPlanet(Planet planet) {
@@ -159,127 +159,110 @@ public class TrackBallCamera extends PerspectiveCamera {
     }
     
     private EventHandler<MouseEvent> bindMouseDraggedEvent() {
-        TrackBallCamera self = this;
-        EventHandler<MouseEvent> ev = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                
-                if(event.getButton() != MouseButton.PRIMARY)
-                {
-                    return;
-                }
-                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
-                double mouseX = event.getScreenX();
-                double mouseY = event.getScreenY();
-                double xrel = -(lastMouseX - mouseX) * moveSensitivity;
-                double yrel = (lastMouseY - mouseY)* moveSensitivity;
-                
-                totalXAngle += xrel;
-                totalYAngle += yrel;
-                
-                if(totalYAngle > 90)
-                {
-                    totalYAngle = 90;
-                }
-                else if(totalYAngle < -90)
-                {
-                    totalYAngle = -90;
-                }
-                
-                if(totalXAngle >= 180)
-                {
-                    totalXAngle -= 360;
-                }
-                else if(totalXAngle <= -180)
-                {
-                    totalXAngle += 360;
-                }
-                
-                self.getTransforms().clear();
-                self.getTransforms().add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
-                self.getTransforms().add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
-                self.getTransforms().add(new Translate(x, y, z));
-                lastMouseX = mouseX;
-                lastMouseY = mouseY;
-                updateTiles();
+        return (MouseEvent event) -> {
+            if(event.getButton() != MouseButton.PRIMARY)
+            {
+                return;
             }
+            scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+            double mouseX = event.getScreenX();
+            double mouseY = event.getScreenY();
+            double xrel = -(lastMouseX - mouseX) * moveSensitivity;
+            double yrel = (lastMouseY - mouseY)* moveSensitivity;
+            
+            totalXAngle += xrel;
+            totalYAngle += yrel;
+            
+            if(totalYAngle > 90)
+            {
+                totalYAngle = 90;
+            }
+            else if(totalYAngle < -90)
+            {
+                totalYAngle = -90;
+            }
+            
+            if(totalXAngle >= 180)
+            {
+                totalXAngle -= 360;
+            }
+            else if(totalXAngle <= -180)
+            {
+                totalXAngle += 360;
+            }
+            ObservableList<Transform> transforms = TrackBallCamera.this.getTransforms();
+            transforms.clear();
+            transforms.add(new Rotate(totalXAngle, new Point3D(0, 1, 0)));
+            transforms.add(new Rotate(totalYAngle, new Point3D(1, 0, 0)));
+            transforms.add(new Translate(x, y, z));
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            updateTiles();
         };
-        return ev;
     }
     
     private EventHandler <MouseEvent> bindMousePressedEvent() {
        
-        return new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double mx = event.getScreenX();
-                double my = event.getScreenY();
-                if(event.getButton() == MouseButton.PRIMARY)
-                {
-                    scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
-                    lastMouseX = mx;
-                    lastMouseY = my;
-                }
-                
-                else if(event.getButton() == MouseButton.SECONDARY)
-                {
-                    planet.setOnMousePressed(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            if(event.getButton() != MouseButton.SECONDARY)
-                            {
-                                return;
-                            }
-                            double xTmp = event.getX();
-                            double yTmp = event.getY();
-                            double zTmp = event.getZ();
-                            GPSCoord coord = new Pos3D(-xTmp, yTmp, zTmp).toGPSCoord();
-                            GPSCoord coordCam = new Pos3D(x, y, z).toGPSCoord();
-                            
-                            coord.setLongitude(-coordCam.getLongitude() + coord.getLongitude());
-                            coord.setLatitude(-coordCam.getLatitude() + coord.getLatitude());
-
-                            for(Plugin plugin : plugins)
-                            {
-                                if(plugin.getPlugin().getClass().getAnnotation(RenderGPS.class) != null)
-                                {
-                                    plugin.run(coord, root, planet.getRadius());
-                                }
-                            }
+        return (MouseEvent event) -> {
+            double mx = event.getScreenX();
+            double my = event.getScreenY();
+            if(event.getButton() == MouseButton.PRIMARY)
+            {
+                scene.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+                lastMouseX = mx;
+                lastMouseY = my;
+            }
+            
+            else if(event.getButton() == MouseButton.SECONDARY)
+            {
+                planet.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if(event.getButton() != MouseButton.SECONDARY)
+                        {
+                            return;
                         }
-                    });                
-                }
-            };
+                        double xTmp = event.getX();
+                        double yTmp = event.getY();
+                        double zTmp = event.getZ();
+                        GPSCoord coord = new Pos3D(-xTmp, yTmp, zTmp).toGPSCoord();
+                        GPSCoord coordCam = new Pos3D(x, y, z).toGPSCoord();
+                        
+                        coord.setLongitude(-coordCam.getLongitude() + coord.getLongitude());
+                        coord.setLatitude(-coordCam.getLatitude() + coord.getLatitude());
+                        
+                        plugins.stream().filter((plugin) -> (plugin.getPlugin().getClass().getAnnotation(RenderGPS.class) != null)).forEach((plugin) -> {
+                            plugin.run(coord, root, planet.getRadius());
+                        });
+                    }
+                });
+            }
         };
     }
     private EventHandler <ScrollEvent> bindScrollMouseEvent(){
-        return new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-
-                fov -= fov * event.getDeltaY()*zoomSensitivity;
-
-                if(fov > 35){
-                    fov = 35;
-                }
-
-                if(fov < 0.1){
-                    fov = 0.1;
-                }
-
-                setFieldOfView(fov);
-                moveSensitivity -= moveSensitivity * event.getDeltaY()*zoomSensitivity;
-                
-                if(moveSensitivity > 0.4)
-                {
-                    moveSensitivity = 0.4;
-                }
-                else if(moveSensitivity < 0.001)
-                {
-                    moveSensitivity = 0.001;
-                }
-                updateTiles();
+        return (ScrollEvent event) -> {
+            fov -= fov * event.getDeltaY()*zoomSensitivity;
+            
+            if(fov > 35){
+                fov = 35;
             }
+            
+            if(fov < 0.1){
+                fov = 0.1;
+            }
+            
+            setFieldOfView(fov);
+            moveSensitivity -= moveSensitivity * event.getDeltaY()*zoomSensitivity;
+            
+            if(moveSensitivity > 0.4)
+            {
+                moveSensitivity = 0.4;
+            }
+            else if(moveSensitivity < 0.001)
+            {
+                moveSensitivity = 0.001;
+            }
+            updateTiles();
         };
     }
     
@@ -299,7 +282,6 @@ public class TrackBallCamera extends PerspectiveCamera {
 
         stage.show();
 
-
         readTBCFile("./cartography/camera.tbc");
                 
     }
@@ -311,32 +293,25 @@ public class TrackBallCamera extends PerspectiveCamera {
 
         File camFile = new File(folderPath + filePath);
 
-        if(!new File(folderPath).exists()){
+        if (!new File(folderPath).exists()) {
             new File(folderPath).mkdirs();
         }
 
-        try{
-            DataOutputStream writer = new DataOutputStream(new FileOutputStream(camFile));
-
+        try (DataOutputStream writer = new DataOutputStream(new FileOutputStream(camFile))) {
             writer.writeInt(data.length);
-            for(double d : data){
+            for (double d : data) {
                 writer.writeDouble(d);
             }
-            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(TrackBallCamera.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        }
-        catch (IOException e){
-            System.out.println("Error when writting file: " + e.getMessage());
-        }
 
     }
 
     private EventHandler <MouseEvent> bindMouseReleasedEvent(){
-        return new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                scene.setCursor(javafx.scene.Cursor.DEFAULT);
-            }
+        return (MouseEvent event) -> {
+            scene.setCursor(javafx.scene.Cursor.DEFAULT);
         };
     }
 }

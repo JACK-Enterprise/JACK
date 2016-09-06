@@ -20,7 +20,7 @@ public class WatchThread implements Runnable {
             dir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
         }
         catch (Exception e){
-            System.out.println("Error when initializing Watch service:" + e.getMessage());
+//            System.out.println("Error when initializing Watch service:" + e.getMessage());
         }
     }
 
@@ -39,8 +39,8 @@ public class WatchThread implements Runnable {
                 List<WatchEvent<?>> events = watchKey.pollEvents();
                 for(WatchEvent<?> event : events){
                     if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
-                        System.out.println("------------WATCHER THREAD INFORMATION------------");
-                        System.out.println("Modified: " + event.context().toString());
+//                        System.out.println("------------WATCHER THREAD INFORMATION------------");
+//                        System.out.println("Modified: " + event.context().toString());
                         state = true;
                     }
                 }
@@ -48,7 +48,7 @@ public class WatchThread implements Runnable {
                 state = false;
             }
             catch (InterruptedException e){
-                System.out.println("Error when watching: " + e.getMessage());
+//                System.out.println("Error when watching: " + e.getMessage());
                 running = false;
             }
 

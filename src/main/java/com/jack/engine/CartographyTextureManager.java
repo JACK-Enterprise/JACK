@@ -58,8 +58,8 @@ public class CartographyTextureManager {
         double maxLg = Math.ceil(maxCoord.getLongitude() / stepX) * stepX;
         double maxLat = Math.ceil(maxCoord.getLatitude() / stepY) * stepY;
         ArrayList boxes = new ArrayList<MeshView>();
-        double w = stepX * 2 * PI * radius / 360;
-        double h = stepY * 2 * PI * radius / 360;        
+//        double w = stepX * 2 * PI * radius / 360;
+//        double h = stepY * 2 * PI * radius / 360;        
         int res = fov > 20 ? 32 : (fov > 10 ? 64 : (fov > 1? 128 : 256));
         double nextI;
         double nextJ;
@@ -81,11 +81,11 @@ public class CartographyTextureManager {
                     GPSCoord nextCoordI = new GPSCoord(nextI, j);
                     GPSCoord nextCoordJ = new GPSCoord(i, nextJ);
                     GPSCoord nextCoordIJ = new GPSCoord(nextI, nextJ);
-
-                    MeshView box = createPlane(x, y, filename,nextCoordJ.toPos3D(planet.getRadius()),
-                                                coordTmp.toPos3D(planet.getRadius()),
-                                                nextCoordIJ.toPos3D(planet.getRadius()),
-                                                nextCoordI.toPos3D(planet.getRadius()), res, planet.getRadius());
+                    MeshView box = createPlane(x, y, filename, // 0, 0
+                                                nextCoordJ.toPos3D(planet.getRadius()), // 0, 1 
+                                                coordTmp.toPos3D(planet.getRadius()), // 0, 0
+                                                nextCoordIJ.toPos3D(planet.getRadius()), // 1, 1
+                                                nextCoordI.toPos3D(planet.getRadius()), res, planet.getRadius()); // 1, 0
 
                     boxes.add(box);
                     tmpMap.put(filename, box);
@@ -103,20 +103,19 @@ public class CartographyTextureManager {
           .map(Map.Entry::getKey)
           .collect(Collectors.toSet());        
         
-        for(String k : remover)
-        {
+        remover.stream().map((k) -> {
             group.getChildren().removeAll(prevBoxesList.get(k));
+            return k;
+        }).forEach((k) -> {
             prevBoxesList.remove(k);
-        }
+        });
         
-        for(String k : tmpMap.keySet())
-        {
+        tmpMap.keySet().stream().forEach((k) -> {
             MeshView b = tmpMap.get(k);
-            if(b != null)
-            {
+            if (b != null) {
                 prevBoxesList.put(k, b);
             }
-        }
+        });
         group.getChildren().addAll(boxes);
     }
     
