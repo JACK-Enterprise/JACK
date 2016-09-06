@@ -7,6 +7,8 @@ package com.jack.address.controller;
 import com.sun.glass.ui.MenuBar;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
+import com.jack.wms.WMSImageryProvider;
+import javafx.scene.control.TextArea;
 
 /**
  * The controller class for the MenuBar
@@ -15,15 +17,32 @@ public class MenuBarController {
 
     // Reference to the main application
     private MainApp mainApp;
+    private static MenuBarController instance;
 
     @FXML
     private MenuBar menuBar;
+    
+    @FXML
+    public TextArea coordinates;
+    
+    @FXML
+    public TextArea consolesText;
+    
+    public static double longitude = 0;
+    public static double latitude = 0;
+    
+    public static double minLongitude = 0;
+    public static double minLatitude = 0;
+    
+    public static double maxLongitude = 0;
+    public static double maxLatitude = 0;
 
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public MenuBarController(){
+        instance = this;
     }
 
     /**
@@ -34,8 +53,29 @@ public class MenuBarController {
     @FXML
     private void initialize(){
         /* NOW IS EMPTY */
+        initializeCoordinates();
+        instance = this;
     }
 
+    public static MenuBarController getInstance() {
+        return instance;
+    }
+    
+    public void initializeCoordinates() {
+        coordinates.setText("min lat : " + minLatitude);
+    }
+    
+    public void refresh() {
+        refreshCoordinates();
+//        refreshConsole();
+    }
+    
+    public void refreshCoordinates() {
+        new Thread( () -> {
+            initializeCoordinates();
+        } ).start();
+    }
+    
     /**
      * Is called by the main application to give a reference back to itself.
      * @param mainApp

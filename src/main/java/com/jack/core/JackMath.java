@@ -1,5 +1,6 @@
 package com.jack.core;
 
+import com.jack.address.controller.MenuBarController;
 import com.jack.engine.EmpriseCoord;
 import com.jack.engine.GPSCoord;
 import javafx.scene.input.MouseEvent;
@@ -10,26 +11,26 @@ import javafx.scene.input.ScrollEvent;
  */
 public class JackMath {
 
-    private static double EPSILON1 = 0.1;
-    private static double EPSILON2 = 0.01;
-    private static double EPSILON3 = 0.001;
-    private static double EPSILON4 = 0.0001;
-    private static double EPSILON5 = 0.00001;
-    private static double EPSILON6 = 0.000001;
-    private static double EPSILON7 = 0.0000001;
-    private static double EPSILON8 = 0.00000001;
-    private static double EPSILON9 = 0.000000001;
-    private static double EPSILON10 = 0.0000000001;
-    private static double EPSILON11 = 0.00000000001;
-    private static double EPSILON12 = 0.000000000001;
-    private static double EPSILON13 = 0.0000000000001;
-    private static double EPSILON14 = 0.00000000000001;
-    private static double EPSILON15 = 0.000000000000001;
-    private static double EPSILON16 = 0.0000000000000001;
-    private static double EPSILON17 = 0.00000000000000001;
-    private static double EPSILON18 = 0.000000000000000001;
-    private static double EPSILON19 = 0.0000000000000000001;
-    private static double EPSILON20 = 0.00000000000000000001;
+    private static final double EPSILON1 = 0.1;
+    private static final double EPSILON2 = 0.01;
+    private static final double EPSILON3 = 0.001;
+    private static final double EPSILON4 = 0.0001;
+    private static final double EPSILON5 = 0.00001;
+    private static final double EPSILON6 = 0.000001;
+    private static final double EPSILON7 = 0.0000001;
+    private static final double EPSILON8 = 0.00000001;
+    private static final double EPSILON9 = 0.000000001;
+    private static final double EPSILON10 = 0.0000000001;
+    private static final double EPSILON11 = 0.00000000001;
+    private static final double EPSILON12 = 0.000000000001;
+    private static final double EPSILON13 = 0.0000000000001;
+    private static final double EPSILON14 = 0.00000000000001;
+    private static final double EPSILON15 = 0.000000000000001;
+    private static final double EPSILON16 = 0.0000000000000001;
+    private static final double EPSILON17 = 0.00000000000000001;
+    private static final double EPSILON18 = 0.000000000000000001;
+    private static final double EPSILON19 = 0.0000000000000000001;
+    private static final double EPSILON20 = 0.00000000000000000001;
     public static  double TWO_PI = 2.0 * Math.PI;
 
     public static double getEPSILON1() {
@@ -135,7 +136,9 @@ public class JackMath {
 
         double minY = camCoord.getLatitude() - xPos * 2;
         double maxY = camCoord.getLatitude() + xPos * 2;
-
+        
+        MenuBarController.minLatitude = minX;
+        MenuBarController.getInstance().refreshCoordinates();
         double camPos = camCoord.getLongitude();
 
         /*
