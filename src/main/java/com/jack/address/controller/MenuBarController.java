@@ -26,7 +26,7 @@ public class MenuBarController {
     public TextArea coordinates;
     
     @FXML
-    public TextArea consolesText;
+    public TextArea consoleText;
     
     public static double longitude = 0;
     public static double latitude = 0;
@@ -37,6 +37,7 @@ public class MenuBarController {
     public static double maxLongitude = 0;
     public static double maxLatitude = 0;
 
+    
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
@@ -53,8 +54,8 @@ public class MenuBarController {
     @FXML
     private void initialize(){
         /* NOW IS EMPTY */
-        initializeCoordinates();
         instance = this;
+        initializeCoordinates();
     }
 
     public static MenuBarController getInstance() {
@@ -65,9 +66,15 @@ public class MenuBarController {
         coordinates.setText("min lat : " + minLatitude);
     }
     
-    public void refresh() {
-        refreshCoordinates();
-//        refreshConsole();
+    public void initializeConsole(StringBuilder console) {
+        consoleText.setText(console.toString());
+    }
+    
+    public void refreshConsole(StringBuilder console) {
+        new Thread( () -> {
+            initializeConsole(console);
+        } ).start();
+        
     }
     
     public void refreshCoordinates() {
@@ -82,6 +89,7 @@ public class MenuBarController {
      */
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+        initializeConsole( mainApp.getIni().getConsole() );
     }
 
 

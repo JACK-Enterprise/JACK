@@ -1,5 +1,6 @@
 package com.jack.configuration;
 
+import com.jack.address.controller.MenuBarController;
 import org.ini4j.Wini;
 
 import java.io.File;
@@ -16,10 +17,11 @@ public class IniManager {
     private Wini ini;
     private WatchThread watchThread;
     private Thread thread;
+    private StringBuilder console = new StringBuilder();
 
     public IniManager(){
         iniPath = "./config.ini";
-
+        console.append("chargement du fichier ...\n");
         if(!ifExist()){
             try{
                 new File(iniPath).createNewFile();
@@ -27,6 +29,7 @@ public class IniManager {
                 resetDefaultFile();
             }
             catch (IOException e){
+                console.append("Error when creating new configuration file: ").append(e.getMessage()).append("\n");
                 System.out.println("Error when creating new configuration file: " + e.getMessage());
             }
         }
@@ -36,16 +39,22 @@ public class IniManager {
             try {
                 ini = new Wini(new File(iniPath));
             } catch (IOException e) {
+                console.append("Error when opening the configuration file: ").append(e.getMessage()).append("\n");
                 System.out.println("Error when opening the configuration file: " + e.getMessage());
             }
         }
-
+        console.append("fichier chargé\n");
     }
 
     private void resetDefaultFile(){
         try{
             Date now = new Date();
-
+            
+            console.append("Configuration file for the JACK app")
+                   .append("\n#This file should not be modified directly outside the app ")
+                   .append("\n#Any modification at your own risk ")
+                   .append("\n#This file was structured by Maxime Pelte for JACK Enterprise")
+                   .append("\n#Last modified ").append(now.toString()).append(" by System:JACK:App");
             ini.setComment("Configuration file for the JACK app" +
                     "\n#This file should not be modified directly outside the app " +
                     "\n#Any modification at your own risk " +
@@ -66,6 +75,10 @@ public class IniManager {
         catch (IOException e){
             System.out.println("Error when reading the configuration file: " + e.getMessage());
         }
+    }
+
+    public StringBuilder getConsole() {
+        return console;
     }
 
     private boolean ifExist(){
