@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.MenuBarController" >
    <top>
@@ -57,6 +58,11 @@
                   <TextArea fx:id="consoleText" />
                </content>
           </Tab>
+            <Tab text="%key.legends">
+                <content>
+                    <VBox fx:id="legendsList"></VBox>
+                </content>
+            </Tab>
         </tabs>
       </TabPane>
    </bottom>

@@ -3,6 +3,8 @@ package com.jack.configuration;
 import com.jack.address.controller.MenuBarController;
 import org.ini4j.Wini;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -18,14 +20,16 @@ public class IniManager {
     private WatchThread watchThread;
     private Thread thread;
     private StringBuilder console = new StringBuilder();
+    private Map <String, String> legends = new HashMap<>();
 
     public IniManager(){
         iniPath = "./config.ini";
-        console.append("chargement du fichier ...\n");
+        console.append("Loading Files ...\n");
         if(!ifExist()){
             try{
                 new File(iniPath).createNewFile();
                 ini = new Wini(new File(iniPath));
+                console.append("Creating new configuration file \n");
                 resetDefaultFile();
             }
             catch (IOException e){
@@ -38,12 +42,19 @@ public class IniManager {
 
             try {
                 ini = new Wini(new File(iniPath));
+                console.append("Opening config file... \n");
             } catch (IOException e) {
                 console.append("Error when opening the configuration file: ").append(e.getMessage()).append("\n");
 //                System.out.println("Error when opening the configuration file: " + e.getMessage());
             }
         }
-        console.append("fichier chargé\n");
+        console.append("Files loaded.\n");
+
+
+        for (String color : ini.get("legends").childrenNames()){
+            legends.put(color, getStringValue("legends", color));
+        }
+
     }
 
     private void resetDefaultFile(){
@@ -80,6 +91,8 @@ public class IniManager {
     public StringBuilder getConsole() {
         return console;
     }
+
+    public Map <String, String> getLegends() { return legends; }
 
     private boolean ifExist(){
         return new File(iniPath).exists();

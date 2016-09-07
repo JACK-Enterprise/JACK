@@ -138,6 +138,7 @@ public class JackMath {
         double maxY = camCoord.getLatitude() + xPos * 2;
         
         MenuBarController.minLatitude = minX;
+        MenuBarController.minLongitude = minY;
         MenuBarController.getInstance().refreshCoordinates();
         double camPos = camCoord.getLongitude();
 

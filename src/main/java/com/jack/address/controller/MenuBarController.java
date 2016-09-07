@@ -7,9 +7,15 @@ package com.jack.address.controller;
 import com.sun.glass.ui.MenuBar;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
-import com.jack.wms.WMSImageryProvider;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import java.util.Map;
 
 /**
  * The controller class for the MenuBar
@@ -28,6 +34,9 @@ public class MenuBarController {
     
     @FXML
     public TextArea consoleText;
+
+    @FXML
+    public VBox legendsList;
     
     public static double longitude = 0;
     public static double latitude = 0;
@@ -64,7 +73,7 @@ public class MenuBarController {
     }
     
     public void initializeCoordinates() {
-        coordinates.setText("min lat : " + minLatitude);
+        coordinates.setText("min lat : " + minLatitude + "\nmin long : " + minLongitude + "\n");
     }
     
     public void initializeConsole(StringBuilder console) {
@@ -80,6 +89,20 @@ public class MenuBarController {
     public void refreshCoordinates() {
         Platform.runLater(this::initializeCoordinates);
     }
+
+    public void initializeLegends(Map<String, String> legends){
+        for (Map.Entry<String, String> entry : legends.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            HBox box = new HBox();
+            ObservableList<Node> list = box.getChildren();
+            javafx.scene.shape.Rectangle r = new javafx.scene.shape.Rectangle(0, 1, Color.RED);
+            Text t = new Text(value);
+            list.add(r);
+            list.add(t);
+            legendsList.getChildren().add(box);
+        }
+    }
     
     /**
      * Is called by the main application to give a reference back to itself.
@@ -88,6 +111,7 @@ public class MenuBarController {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
         initializeConsole( mainApp.getIni().getConsole() );
+        initializeLegends( mainApp.getIni().getLegends() );
     }
 
 
