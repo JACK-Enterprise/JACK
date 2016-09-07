@@ -2,6 +2,7 @@ package com.jack.configuration;
 
 import com.jack.address.controller.MenuBarController;
 import org.ini4j.Wini;
+import org.ini4j.Profile.Section;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by maxim on 21/07/2016.
@@ -51,8 +53,11 @@ public class IniManager {
         console.append("Files loaded.\n");
 
 
-        for (String color : ini.get("legends").childrenNames()){
-            legends.put(color, getStringValue("legends", color));
+        Section section = ini.get("legends");
+        for (Section.Entry<String, String> entry : section.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            legends.put(key, value);
         }
 
     }

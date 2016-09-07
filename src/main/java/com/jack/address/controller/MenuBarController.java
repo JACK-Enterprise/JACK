@@ -96,7 +96,8 @@ public class MenuBarController {
             String value = entry.getValue();
             HBox box = new HBox();
             ObservableList<Node> list = box.getChildren();
-            javafx.scene.shape.Rectangle r = new javafx.scene.shape.Rectangle(0, 1, Color.RED);
+            javafx.scene.shape.Rectangle r = new javafx.scene.shape.Rectangle(5, 5, 10, 10);
+            r.setFill(Color.valueOf(key));
             Text t = new Text(value);
             list.add(r);
             list.add(t);
