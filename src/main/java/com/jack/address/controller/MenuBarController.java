@@ -8,6 +8,7 @@ import com.sun.glass.ui.MenuBar;
 import javafx.fxml.FXML;
 import com.jack.address.MainApp;
 import com.jack.wms.WMSImageryProvider;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 /**
@@ -70,16 +71,14 @@ public class MenuBarController {
         consoleText.setText(console.toString());
     }
     
-    public void refreshConsole(StringBuilder console) {
-        new Thread( () -> {
+    public void refreshConsole(final StringBuilder console) {
+        Platform.runLater(() -> {
             initializeConsole(console);
-        } ).start();
+        });
     }
     
     public void refreshCoordinates() {
-        new Thread( () -> {
-            initializeCoordinates();
-        } ).start();
+        Platform.runLater(this::initializeCoordinates);
     }
     
     /**
