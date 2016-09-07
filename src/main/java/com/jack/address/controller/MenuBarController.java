@@ -97,11 +97,20 @@ public class MenuBarController {
             HBox box = new HBox();
             ObservableList<Node> list = box.getChildren();
             javafx.scene.shape.Rectangle r = new javafx.scene.shape.Rectangle(5, 5, 10, 10);
-            r.setFill(Color.valueOf(key));
+            r.setFill(isHexNumber(key) ? Color.web(key) : Color.valueOf(key));
             Text t = new Text(value);
             list.add(r);
             list.add(t);
             legendsList.getChildren().add(box);
+        }
+    }
+
+    private static boolean isHexNumber(String cadena) {
+        try {
+            Long.parseLong(cadena, 16);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
         }
     }
     
