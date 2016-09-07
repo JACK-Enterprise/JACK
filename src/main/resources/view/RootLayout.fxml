@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.MenuBarController" >
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jack.address.controller.MenuBarController" stylesheets="@stylesheet.css">
+
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -53,9 +54,9 @@
                   <TextArea fx:id="coordinates" />
                </content>
           </Tab>
-          <Tab text="%key.console">
+          <Tab text="%key.console" >
                <content>
-                  <TextArea fx:id="consoleText" />
+                  <TextArea fx:id="consoleText" id="console"/>
                </content>
           </Tab>
             <Tab text="%key.legends">

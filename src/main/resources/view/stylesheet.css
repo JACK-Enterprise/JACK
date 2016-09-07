@@ -1,0 +1,7 @@
+#console .content{
+    -fx-font-family: Consolas;
+    -fx-background-color: 	#00001a;
+    -fx-highlight-fill: #00ff00;
+    -fx-highlight-text-fill: #000000;
+    -fx-text-fill: #00ff00;
+}
